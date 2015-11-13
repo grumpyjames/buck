@@ -18,7 +18,7 @@ package com.facebook.buck.jvm.java.intellij;
 
 import com.facebook.buck.graph.MutableDirectedGraph;
 import com.facebook.buck.io.MorePaths;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.util.immutables.BuckStyleImmutable;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -42,10 +42,10 @@ import java.util.Map;
  */
 public class IjSourceRootSimplifier {
 
-  private JavaPackageFinder javaPackageFinder;
+  private PackageFinder packageFinder;
 
-  public IjSourceRootSimplifier(JavaPackageFinder javaPackageFinder) {
-    this.javaPackageFinder = javaPackageFinder;
+  public IjSourceRootSimplifier(PackageFinder packageFinder) {
+    this.packageFinder = packageFinder;
   }
 
   private static final ImmutableSet<IjFolder.Type> MERGABLE_FOLDER_TYPES =
@@ -74,7 +74,7 @@ public class IjSourceRootSimplifier {
     }
 
     ImmutableSet<IjFolder> foldersToMerge = foldersToMergeBuilder.build();
-    PackagePathCache packagePathCache = new PackagePathCache(foldersToMerge, javaPackageFinder);
+    PackagePathCache packagePathCache = new PackagePathCache(foldersToMerge, packageFinder);
     BottomUpPathMerger walker =
         new BottomUpPathMerger(foldersToMerge, limit.getValue(), packagePathCache);
 
@@ -245,7 +245,7 @@ public class IjSourceRootSimplifier {
 
     public PackagePathCache(
         ImmutableSet<IjFolder> startingFolders,
-        JavaPackageFinder javaPackageFinder) {
+        PackageFinder packageFinder) {
       delegate = new ParsingJavaPackageFinder.PackagePathCache();
       for (IjFolder startingFolder : startingFolders) {
         if (!startingFolder.getWantsPackagePrefix()) {
@@ -254,7 +254,7 @@ public class IjSourceRootSimplifier {
         Path path = FluentIterable.from(startingFolder.getInputs())
             .first()
             .or(lookupPath(startingFolder));
-        delegate.insert(path, javaPackageFinder.findJavaPackageFolder(path));
+        delegate.insert(path, packageFinder.findJavaPackageFolder(path));
       }
     }
 

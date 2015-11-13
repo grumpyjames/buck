@@ -17,17 +17,17 @@
 package com.facebook.buck.jvm.java;
 
 import com.facebook.buck.io.MorePaths;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.model.BuildTarget;
 
 import java.nio.file.Path;
 
-public class ResourcesRootPackageFinder implements JavaPackageFinder {
+public class ResourcesRootPackageFinder implements PackageFinder {
 
   private final Path resourcesRoot;
-  private final JavaPackageFinder fallbackFinder;
+  private final PackageFinder fallbackFinder;
 
-  public ResourcesRootPackageFinder(Path resourcesRoot, JavaPackageFinder fallbackFinder) {
+  public ResourcesRootPackageFinder(Path resourcesRoot, PackageFinder fallbackFinder) {
     this.resourcesRoot = resourcesRoot;
     this.fallbackFinder = fallbackFinder;
   }

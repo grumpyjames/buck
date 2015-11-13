@@ -18,8 +18,8 @@ package com.facebook.buck.jvm.java.intellij;
 
 import static org.junit.Assert.assertThat;
 
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.jvm.java.DefaultJavaPackageFinder;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.model.BuildTarget;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
@@ -69,12 +69,12 @@ public class IjSourceRootSimplifierTest {
     return buildFolder(path, AbstractIjFolder.Type.TEST_FOLDER);
   }
 
-  private static JavaPackageFinder fakePackageFinder() {
+  private static PackageFinder fakePackageFinder() {
     return fakePackageFinder(ImmutableMap.<Path, Path>of());
   }
 
-  private static JavaPackageFinder fakePackageFinder(final ImmutableMap<Path, Path> packageMap) {
-    return new JavaPackageFinder() {
+  private static PackageFinder fakePackageFinder(final ImmutableMap<Path, Path> packageMap) {
+    return new PackageFinder() {
       @Override
       public Path findJavaPackageFolder(Path pathRelativeToProjectRoot) {
         // The Path given here is a path to a file, not a folder.

@@ -18,7 +18,7 @@ package com.facebook.buck.rules;
 
 import com.facebook.buck.artifact_cache.NoopArtifactCache;
 import com.facebook.buck.event.BuckEventBusFactory;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.jvm.java.FakeJavaPackageFinder;
 import com.facebook.buck.model.BuildId;
 import com.facebook.buck.step.DefaultStepRunner;
@@ -38,14 +38,14 @@ public class FakeBuildContext {
   /** A BuildContext which doesn't touch the host filesystem or actually execute steps. */
   public static final BuildContext NOOP_CONTEXT = newBuilder()
       .setActionGraph(new ActionGraph(ImmutableList.<BuildRule>of()))
-      .setJavaPackageFinder(new FakeJavaPackageFinder())
+      .setPackageFinder(new FakeJavaPackageFinder())
       .setArtifactCache(new NoopArtifactCache())
       .build();
 
   /**
    * User still needs to invoke {@link ImmutableBuildContext.Builder#setActionGraph(ActionGraph)}
-   * and {@link ImmutableBuildContext.Builder#setJavaPackageFinder(
-   *JavaPackageFinder)}
+   * and {@link ImmutableBuildContext.Builder#setPackageFinder(
+   *PackageFinder)}
    * before the {@link ImmutableBuildContext.Builder#build()} method of the builder can be invoked.
    */
   public static ImmutableBuildContext.Builder newBuilder() {

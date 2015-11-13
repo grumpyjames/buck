@@ -213,7 +213,7 @@ public abstract class AbstractCommand implements Command {
         .setEventBus(params.getBuckEventBus())
         .setPlatform(params.getPlatform())
         .setEnvironment(params.getEnvironment())
-        .setJavaPackageFinder(params.getJavaPackageFinder())
+        .setPackageFinder(params.getPackageFinder())
         .setObjectMapper(params.getObjectMapper())
         .build();
   }

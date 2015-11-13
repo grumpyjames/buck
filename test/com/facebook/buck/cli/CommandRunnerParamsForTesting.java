@@ -24,8 +24,8 @@ import com.facebook.buck.artifact_cache.NoopArtifactCache;
 import com.facebook.buck.event.BuckEventBus;
 import com.facebook.buck.event.BuckEventBusFactory;
 import com.facebook.buck.httpserver.WebServer;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.jvm.java.FakeJavaPackageFinder;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.parser.Parser;
 import com.facebook.buck.parser.ParserConfig;
 import com.facebook.buck.rules.Cell;
@@ -56,7 +56,7 @@ public class CommandRunnerParamsForTesting {
       BuckConfig config,
       Platform platform,
       ImmutableMap<String, String> environment,
-      JavaPackageFinder javaPackageFinder,
+      PackageFinder packageFinder,
       ObjectMapper objectMapper,
       Optional<WebServer> webServer)
       throws IOException, InterruptedException {
@@ -74,7 +74,7 @@ public class CommandRunnerParamsForTesting {
             ParserConfig.AllowSymlinks.ALLOW),
         platform,
         environment,
-        javaPackageFinder,
+        packageFinder,
         objectMapper,
         new DefaultClock(),
         Optional.<ProcessManager>absent(),
@@ -96,7 +96,7 @@ public class CommandRunnerParamsForTesting {
     private BuckEventBus eventBus = BuckEventBusFactory.newInstance();
     private Platform platform = Platform.detect();
     private ImmutableMap<String, String> environment = ImmutableMap.copyOf(System.getenv());
-    private JavaPackageFinder javaPackageFinder = new FakeJavaPackageFinder();
+    private PackageFinder packageFinder = new FakeJavaPackageFinder();
     private ObjectMapper objectMapper = new ObjectMapper();
     private Optional<WebServer> webServer = Optional.absent();
 
@@ -111,7 +111,7 @@ public class CommandRunnerParamsForTesting {
           config,
           platform,
           environment,
-          javaPackageFinder,
+          packageFinder,
           objectMapper,
           webServer);
     }

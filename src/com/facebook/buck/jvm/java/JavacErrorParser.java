@@ -17,7 +17,7 @@
 package com.facebook.buck.jvm.java;
 
 import com.facebook.buck.io.ProjectFilesystem;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 
@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 public class JavacErrorParser {
 
   private final ProjectFilesystem filesystem;
-  private final JavaPackageFinder javaPackageFinder;
+  private final PackageFinder packageFinder;
 
   private static ImmutableList<Pattern> onePartPatterns = ImmutableList.of(
       Pattern.compile(
@@ -61,9 +61,9 @@ public class JavacErrorParser {
       Pattern.compile(
           "^(?<file>.+):[0-9]+: error: package (?<class>\\S+) does not exist"));
 
-  public JavacErrorParser(ProjectFilesystem filesystem, JavaPackageFinder javaPackageFinder) {
+  public JavacErrorParser(ProjectFilesystem filesystem, PackageFinder packageFinder) {
     this.filesystem = filesystem;
-    this.javaPackageFinder = javaPackageFinder;
+    this.packageFinder = packageFinder;
   }
 
   public Optional<String> getMissingSymbolFromCompilerError(String error) {
@@ -96,7 +96,7 @@ public class JavacErrorParser {
     String className = matcher.group("class");
     Path repoRoot = filesystem.getRootPath().toAbsolutePath().normalize();
     Path relativePath = repoRoot.relativize(Paths.get(fileName));
-    String packageName = javaPackageFinder.findJavaPackage(relativePath);
+    String packageName = packageFinder.findJavaPackage(relativePath);
     return Optional.of(packageName + "." + className);
   }
 }

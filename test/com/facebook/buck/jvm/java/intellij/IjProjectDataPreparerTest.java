@@ -25,9 +25,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.jvm.java.DefaultJavaPackageFinder;
 import com.facebook.buck.jvm.java.JavaLibraryBuilder;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.jvm.java.JavaTestBuilder;
 import com.facebook.buck.jvm.java.PrebuiltJarBuilder;
 import com.facebook.buck.model.BuildTargetFactory;
@@ -54,12 +54,12 @@ import java.nio.file.Paths;
 public class IjProjectDataPreparerTest {
 
   private FakeProjectFilesystem filesystem;
-  private JavaPackageFinder javaPackageFinder;
+  private PackageFinder packageFinder;
 
   @Before
   public void setUp() {
     filesystem = new FakeProjectFilesystem();
-    javaPackageFinder = DefaultJavaPackageFinder.createDefaultJavaPackageFinder(
+    packageFinder = DefaultJavaPackageFinder.createDefaultJavaPackageFinder(
         ImmutableSet.of("/java/", "/javatests/")
     );
   }
@@ -83,7 +83,7 @@ public class IjProjectDataPreparerTest {
     IjModule baseModule = IjModuleGraphTest.getModuleForTarget(moduleGraph, baseTargetNode);
 
     IjProjectTemplateDataPreparer dataPreparer =
-        new IjProjectTemplateDataPreparer(javaPackageFinder, moduleGraph, filesystem);
+        new IjProjectTemplateDataPreparer(packageFinder, moduleGraph, filesystem);
 
     ContentRoot contentRoot = dataPreparer.getContentRoot(baseModule);
     assertEquals("file://$MODULE_DIR$/../../java/com/example/base", contentRoot.getUrl());
@@ -169,7 +169,7 @@ public class IjProjectDataPreparerTest {
         IjModuleGraphTest.getModuleForTarget(moduleGraph, baseTestsTargetNode);
 
     IjProjectTemplateDataPreparer dataPreparer =
-        new IjProjectTemplateDataPreparer(javaPackageFinder, moduleGraph, filesystem);
+        new IjProjectTemplateDataPreparer(packageFinder, moduleGraph, filesystem);
 
     assertEquals(
         IjModuleGraphTest.getModuleForTarget(moduleGraph, baseInlineTestsTargetNode),
@@ -253,7 +253,7 @@ public class IjProjectDataPreparerTest {
     IjModuleGraph moduleGraph = IjModuleGraphTest.createModuleGraph(
         ImmutableSet.<TargetNode<?>>of(baseTargetNode));
     IjProjectTemplateDataPreparer dataPreparer =
-        new IjProjectTemplateDataPreparer(javaPackageFinder, moduleGraph, filesystem);
+        new IjProjectTemplateDataPreparer(packageFinder, moduleGraph, filesystem);
 
     assertThat(
         dataPreparer.getModulesToBeWritten(),
@@ -303,7 +303,7 @@ public class IjProjectDataPreparerTest {
             baseTargetNode,
             baseTestsTargetNode));
     IjProjectTemplateDataPreparer dataPreparer =
-        new IjProjectTemplateDataPreparer(javaPackageFinder, moduleGraph, filesystem);
+        new IjProjectTemplateDataPreparer(packageFinder, moduleGraph, filesystem);
 
     // Libraries don't go into the index.
     assertEquals(
@@ -396,7 +396,7 @@ public class IjProjectDataPreparerTest {
     IjModule rootModule = IjModuleGraphTest.getModuleForTarget(moduleGraph, rootTargetNode);
 
     IjProjectTemplateDataPreparer dataPreparer = new IjProjectTemplateDataPreparer(
-        javaPackageFinder,
+        packageFinder,
         moduleGraph,
         filesystemForExcludesTest);
 

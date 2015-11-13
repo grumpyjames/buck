@@ -35,9 +35,9 @@ import com.facebook.buck.cxx.CxxLibrary;
 import com.facebook.buck.graph.AbstractBreadthFirstTraversal;
 import com.facebook.buck.io.ProjectFilesystem;
 import com.facebook.buck.jvm.core.JvmLibrary;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.jvm.java.AnnotationProcessingParams;
 import com.facebook.buck.jvm.java.JavaBinary;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.jvm.java.PrebuiltJar;
 import com.facebook.buck.log.Logger;
 import com.facebook.buck.model.BuildFileTree;
@@ -136,7 +136,7 @@ public class Project {
   private final ActionGraph actionGraph;
   private final BuildFileTree buildFileTree;
   private final ImmutableMap<Path, String> basePathToAliasMap;
-  private final JavaPackageFinder javaPackageFinder;
+  private final PackageFinder packageFinder;
   private final ExecutionContext executionContext;
   private final ProjectFilesystem projectFilesystem;
   private final Optional<String> pathToDefaultAndroidManifest;
@@ -153,7 +153,7 @@ public class Project {
       ImmutableSortedSet<ProjectConfig> rules,
       ActionGraph actionGraph,
       Map<Path, String> basePathToAliasMap,
-      JavaPackageFinder javaPackageFinder,
+      PackageFinder packageFinder,
       ExecutionContext executionContext,
       BuildFileTree buildFileTree,
       ProjectFilesystem projectFilesystem,
@@ -168,7 +168,7 @@ public class Project {
     this.actionGraph = actionGraph;
     this.buildFileTree = buildFileTree;
     this.basePathToAliasMap = ImmutableMap.copyOf(basePathToAliasMap);
-    this.javaPackageFinder = javaPackageFinder;
+    this.packageFinder = packageFinder;
     this.executionContext = executionContext;
     this.projectFilesystem = projectFilesystem;
     this.pathToDefaultAndroidManifest = pathToDefaultAndroidManifest;
@@ -636,7 +636,7 @@ public class Project {
       // values of project_config() assume this approach to help minimize the tedium in writing all
       // of those project_config() rules.
       String url = "file://$MODULE_DIR$";
-      String packagePrefix = javaPackageFinder.findJavaPackage(
+      String packagePrefix = packageFinder.findJavaPackage(
           Preconditions.checkNotNull(module.pathToImlFile));
       SerializableModule.SourceFolder sourceFolder =
           new SerializableModule.SourceFolder(url, isTestSource, packagePrefix);

@@ -17,7 +17,7 @@ package com.facebook.buck.jvm.java;
 
 import com.facebook.buck.io.MorePaths;
 import com.facebook.buck.io.ProjectFilesystem;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.HasOutputName;
 import com.facebook.buck.rules.BuildRule;
@@ -60,7 +60,7 @@ public class CopyResourcesStep implements Step {
   private final BuildTarget target;
   private final Collection<? extends SourcePath> resources;
   private final Path outputDirectory;
-  private final JavaPackageFinder javaPackageFinder;
+  private final PackageFinder packageFinder;
 
   public CopyResourcesStep(
       ProjectFilesystem filesystem,
@@ -68,13 +68,13 @@ public class CopyResourcesStep implements Step {
       BuildTarget target,
       Collection<? extends SourcePath> resources,
       Path outputDirectory,
-      JavaPackageFinder javaPackageFinder) {
+      PackageFinder packageFinder) {
     this.filesystem = filesystem;
     this.resolver = resolver;
     this.target = target;
     this.resources = resources;
     this.outputDirectory = outputDirectory;
-    this.javaPackageFinder = javaPackageFinder;
+    this.packageFinder = packageFinder;
   }
 
   @Override
@@ -96,7 +96,7 @@ public class CopyResourcesStep implements Step {
       return allSteps.build();
     }
 
-    String targetPackageDir = javaPackageFinder.findJavaPackage(target);
+    String targetPackageDir = packageFinder.findJavaPackage(target);
 
     for (SourcePath rawResource : resources) {
       // If the path to the file defining this rule were:
@@ -133,7 +133,7 @@ public class CopyResourcesStep implements Step {
       if ((matcher = GENERATED_FILE_PATTERN.matcher(resource)).matches()) {
         resource = matcher.group(1);
       }
-      Path javaPackageAsPath = javaPackageFinder.findJavaPackageFolder(Paths.get(resource));
+      Path javaPackageAsPath = packageFinder.findJavaPackageFolder(Paths.get(resource));
 
       Path relativeSymlinkPath;
       if ("".equals(javaPackageAsPath.toString())) {

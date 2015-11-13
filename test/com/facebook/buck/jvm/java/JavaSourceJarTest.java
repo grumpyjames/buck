@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.model.BuildTargetFactory;
 import com.facebook.buck.rules.ActionGraph;
 import com.facebook.buck.rules.BuildContext;
@@ -73,7 +73,7 @@ public class JavaSourceJarTest {
     SourcePath ruleBased = new BuildTargetSourcePath(
         BuildTargetFactory.newInstance("//cheese:cake"));
 
-    JavaPackageFinder finderStub = createNiceMock(JavaPackageFinder.class);
+    PackageFinder finderStub = createNiceMock(PackageFinder.class);
     expect(finderStub.findJavaPackageFolder((Path) anyObject()))
         .andStubReturn(Paths.get("cheese"));
     expect(finderStub.findJavaPackage((Path) anyObject())).andStubReturn("cheese");
@@ -89,7 +89,7 @@ public class JavaSourceJarTest {
 
     BuildContext buildContext = FakeBuildContext.newBuilder()
         .setActionGraph(new ActionGraph(ImmutableList.<BuildRule>of()))
-        .setJavaPackageFinder(finderStub)
+        .setPackageFinder(finderStub)
         .build();
     ImmutableList<Step> steps = rule.getBuildSteps(
         buildContext,

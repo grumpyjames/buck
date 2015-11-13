@@ -36,7 +36,7 @@ import com.facebook.buck.io.MorePaths;
 import com.facebook.buck.io.ProjectFilesystem;
 import com.facebook.buck.jvm.core.HasClasspathEntries;
 import com.facebook.buck.jvm.core.JvmLibrary;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.jvm.java.abi.AbiWriterProtocol;
 import com.facebook.buck.model.BuildId;
 import com.facebook.buck.model.BuildTarget;
@@ -123,7 +123,7 @@ public class DefaultJavaLibraryTest {
   @Before
   public void stubOutBuildContext() {
     StepRunner stepRunner = createNiceMock(StepRunner.class);
-    JavaPackageFinder packageFinder = createNiceMock(JavaPackageFinder.class);
+    PackageFinder packageFinder = createNiceMock(PackageFinder.class);
     replay(packageFinder, stepRunner);
 
     annotationScenarioGenPath = new File(
@@ -404,14 +404,14 @@ public class DefaultJavaLibraryTest {
         .build(ruleResolver);
 
     BuildContext buildContext = EasyMock.createMock(BuildContext.class);
-    JavaPackageFinder javaPackageFinder = EasyMock.createMock(JavaPackageFinder.class);
-    expect(buildContext.getJavaPackageFinder()).andReturn(javaPackageFinder);
+    PackageFinder packageFinder = EasyMock.createMock(PackageFinder.class);
+    expect(buildContext.getPackageFinder()).andReturn(packageFinder);
 
-    replay(buildContext, javaPackageFinder);
+    replay(buildContext, packageFinder);
 
     List<Step> steps = libraryTwo.getBuildSteps(buildContext, new FakeBuildableContext());
 
-    EasyMock.verify(buildContext, javaPackageFinder);
+    EasyMock.verify(buildContext, packageFinder);
 
     ImmutableList<JavacStep> javacSteps = FluentIterable
         .from(steps)
@@ -1273,7 +1273,7 @@ public class DefaultJavaLibraryTest {
         .setClock(new DefaultClock())
         .setBuildId(new BuildId())
         .setArtifactCache(new NoopArtifactCache())
-        .setJavaPackageFinder(EasyMock.createMock(JavaPackageFinder.class))
+        .setPackageFinder(EasyMock.createMock(PackageFinder.class))
         .setAndroidBootclasspathSupplier(
             BuildContext.createBootclasspathSupplier(Suppliers.ofInstance(platformTarget)))
         .setEventBus(BuckEventBusFactory.newInstance())

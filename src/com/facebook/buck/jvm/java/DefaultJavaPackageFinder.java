@@ -17,7 +17,7 @@
 package com.facebook.buck.jvm.java;
 
 import com.facebook.buck.io.MorePaths;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.util.HumanReadableException;
 import com.google.common.base.Joiner;
@@ -30,7 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Deque;
 
-public class DefaultJavaPackageFinder implements JavaPackageFinder {
+public class DefaultJavaPackageFinder implements PackageFinder {
 
   /**
    * Each element in this set is a path prefix from the root of the repository.

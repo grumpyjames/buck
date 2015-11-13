@@ -19,7 +19,7 @@ package com.facebook.buck.jvm.java;
 import static org.junit.Assert.assertEquals;
 
 import com.facebook.buck.io.ProjectFilesystem;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 
@@ -36,9 +36,9 @@ public class JavacErrorParserTest {
   @Before
   public void setUp() {
     projectFilesystem = new ProjectFilesystem(Paths.get(".").toAbsolutePath());
-    JavaPackageFinder javaPackageFinder = DefaultJavaPackageFinder.createDefaultJavaPackageFinder(
+    PackageFinder packageFinder = DefaultJavaPackageFinder.createDefaultJavaPackageFinder(
         ImmutableSet.of("/src/"));
-    javacErrorParser = new JavacErrorParser(projectFilesystem, javaPackageFinder);
+    javacErrorParser = new JavacErrorParser(projectFilesystem, packageFinder);
   }
 
   @Test

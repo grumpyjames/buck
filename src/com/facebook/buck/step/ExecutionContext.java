@@ -21,7 +21,7 @@ import com.facebook.buck.android.NoAndroidSdkException;
 import com.facebook.buck.event.BuckEvent;
 import com.facebook.buck.event.BuckEventBus;
 import com.facebook.buck.event.ThrowableConsoleEvent;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.model.BuildId;
 import com.facebook.buck.util.Ansi;
 import com.facebook.buck.util.ClassLoaderCache;
@@ -88,7 +88,7 @@ public abstract class ExecutionContext implements Closeable {
   public abstract ImmutableMap<String, String> getEnvironment();
 
   @Value.Parameter
-  public abstract JavaPackageFinder getJavaPackageFinder();
+  public abstract PackageFinder getPackageFinder();
 
   @Value.Parameter
   public abstract ObjectMapper getObjectMapper();
@@ -193,7 +193,7 @@ public abstract class ExecutionContext implements Closeable {
     @Nullable private BuckEventBus eventBus = null;
     @Nullable private Platform platform = null;
     @Nullable private ImmutableMap<String, String> environment = null;
-    @Nullable private JavaPackageFinder javaPackageFinder = null;
+    @Nullable private PackageFinder packageFinder = null;
     @Nullable private ObjectMapper objectMapper = null;
     private ClassLoaderCache classLoaderCache = new ClassLoaderCache();
     private ConcurrencyLimit concurrencyLimit =
@@ -218,7 +218,7 @@ public abstract class ExecutionContext implements Closeable {
           Preconditions.checkNotNull(eventBus),
           Preconditions.checkNotNull(platform),
           Preconditions.checkNotNull(environment),
-          Preconditions.checkNotNull(javaPackageFinder),
+          Preconditions.checkNotNull(packageFinder),
           Preconditions.checkNotNull(objectMapper),
           Preconditions.checkNotNull(classLoaderCache),
           Preconditions.checkNotNull(concurrencyLimit),
@@ -237,7 +237,7 @@ public abstract class ExecutionContext implements Closeable {
       setEventBus(executionContext.getBuckEventBus());
       setPlatform(executionContext.getPlatform());
       setEnvironment(executionContext.getEnvironment());
-      setJavaPackageFinder(executionContext.getJavaPackageFinder());
+      setPackageFinder(executionContext.getPackageFinder());
       setObjectMapper(executionContext.getObjectMapper());
       setConcurrencyLimit(executionContext.getConcurrencyLimit());
       setAdbOptions(executionContext.getAdbOptions());
@@ -308,8 +308,8 @@ public abstract class ExecutionContext implements Closeable {
       return this;
     }
 
-    public Builder setJavaPackageFinder(JavaPackageFinder javaPackageFinder) {
-      this.javaPackageFinder = javaPackageFinder;
+    public Builder setPackageFinder(PackageFinder packageFinder) {
+      this.packageFinder = packageFinder;
       return this;
     }
 

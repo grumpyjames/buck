@@ -22,8 +22,8 @@ import com.facebook.buck.android.AndroidResourceDescription;
 import com.facebook.buck.android.DummyRDotJava;
 import com.facebook.buck.io.ProjectFilesystem;
 import com.facebook.buck.jvm.core.JvmLibrary;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.jvm.java.JavaFileParser;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.rules.BuildRule;
 import com.facebook.buck.rules.BuildRuleResolver;
@@ -43,7 +43,7 @@ import java.nio.file.Path;
 public class IjProject {
 
   private final TargetGraphAndTargets targetGraphAndTargets;
-  private final JavaPackageFinder javaPackageFinder;
+  private final PackageFinder packageFinder;
   private final JavaFileParser javaFileParser;
   private final BuildRuleResolver buildRuleResolver;
   private final SourcePathResolver sourcePathResolver;
@@ -52,14 +52,14 @@ public class IjProject {
 
   public IjProject(
       TargetGraphAndTargets targetGraphAndTargets,
-      JavaPackageFinder javaPackageFinder,
+      PackageFinder packageFinder,
       JavaFileParser javaFileParser,
       BuildRuleResolver buildRuleResolver,
       SourcePathResolver sourcePathResolver,
       ProjectFilesystem projectFilesystem,
       IjModuleGraph.AggregationMode aggregationMode) {
     this.targetGraphAndTargets = targetGraphAndTargets;
-    this.javaPackageFinder = javaPackageFinder;
+    this.packageFinder = packageFinder;
     this.javaFileParser = javaFileParser;
     this.buildRuleResolver = buildRuleResolver;
     this.sourcePathResolver = sourcePathResolver;
@@ -150,13 +150,13 @@ public class IjProject {
         libraryFactory,
         new IjModuleFactory(moduleFactoryResolver),
         aggregationMode);
-    JavaPackageFinder parsingJavaPackageFinder = ParsingJavaPackageFinder.preparse(
+    PackageFinder parsingPackageFinder = ParsingJavaPackageFinder.preparse(
         javaFileParser,
         projectFilesystem,
         IjProjectTemplateDataPreparer.createPackageLookupPathSet(moduleGraph),
-        javaPackageFinder);
+        packageFinder);
     IjProjectWriter writer = new IjProjectWriter(
-        new IjProjectTemplateDataPreparer(parsingJavaPackageFinder, moduleGraph, projectFilesystem),
+        new IjProjectTemplateDataPreparer(parsingPackageFinder, moduleGraph, projectFilesystem),
         projectFilesystem);
     writer.write();
     return requiredBuildTargets.build();

@@ -16,15 +16,15 @@
 
 package com.facebook.buck.jvm.java;
 
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.model.BuildTarget;
 
 import java.nio.file.Path;
 
 /**
- * Facilitates creating a fake {@link JavaPackageFinder} for unit tests.
+ * Facilitates creating a fake {@link PackageFinder} for unit tests.
  */
-public class FakeJavaPackageFinder implements JavaPackageFinder {
+public class FakeJavaPackageFinder implements PackageFinder {
   @Override
   public Path findJavaPackageFolder(Path pathRelativeToProjectRoot) {
     return null;

@@ -21,7 +21,7 @@ import com.facebook.buck.artifact_cache.ArtifactCache;
 import com.facebook.buck.event.BuckEventBus;
 import com.facebook.buck.event.ConsoleEvent;
 import com.facebook.buck.event.ThrowableConsoleEvent;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.HasBuildTarget;
 import com.facebook.buck.rules.ActionGraph;
@@ -92,7 +92,7 @@ public class Build implements Closeable {
 
   private final DefaultStepRunner stepRunner;
 
-  private final JavaPackageFinder javaPackageFinder;
+  private final PackageFinder packageFinder;
 
   private final Clock clock;
 
@@ -106,7 +106,7 @@ public class Build implements Closeable {
       Supplier<AndroidPlatformTarget> androidPlatformTargetSupplier,
       BuildEngine buildEngine,
       ArtifactCache artifactCache,
-      JavaPackageFinder javaPackageFinder,
+      PackageFinder packageFinder,
       Console console,
       long defaultTestTimeoutMillis,
       boolean isCodeCoverageEnabled,
@@ -133,7 +133,7 @@ public class Build implements Closeable {
         .setEventBus(eventBus)
         .setPlatform(platform)
         .setEnvironment(environment)
-        .setJavaPackageFinder(javaPackageFinder)
+        .setPackageFinder(packageFinder)
         .setObjectMapper(objectMapper)
         .setConcurrencyLimit(concurrencyLimit)
         .setAdbOptions(adbOptions)
@@ -142,7 +142,7 @@ public class Build implements Closeable {
     this.artifactCache = artifactCache;
     this.buildEngine = buildEngine;
     this.stepRunner = new DefaultStepRunner(executionContext);
-    this.javaPackageFinder = javaPackageFinder;
+    this.packageFinder = packageFinder;
     this.clock = clock;
   }
 
@@ -178,7 +178,7 @@ public class Build implements Closeable {
         .setStepRunner(stepRunner)
         .setClock(clock)
         .setArtifactCache(artifactCache)
-        .setJavaPackageFinder(javaPackageFinder)
+        .setPackageFinder(packageFinder)
         .setEventBus(executionContext.getBuckEventBus())
         .setAndroidBootclasspathSupplier(
             BuildContext.createBootclasspathSupplier(

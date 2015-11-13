@@ -20,7 +20,7 @@ import com.facebook.buck.model.BuildTarget;
 
 import java.nio.file.Path;
 
-public interface JavaPackageFinder {
+public interface PackageFinder {
 
   /**
    * Given the relative path to a file under the project root, return the Java package with which

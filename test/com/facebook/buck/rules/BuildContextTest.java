@@ -31,7 +31,7 @@ import com.facebook.buck.event.BuckEventBus;
 import com.facebook.buck.event.BuckEventBusFactory;
 import com.facebook.buck.event.BuckEventBusFactory.CapturingConsoleEventListener;
 import com.facebook.buck.io.MorePaths;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.model.BuildId;
 import com.facebook.buck.step.StepRunner;
 import com.facebook.buck.timing.Clock;
@@ -57,7 +57,7 @@ public class BuildContextTest {
     builder.setActionGraph(createMock(ActionGraph.class));
     builder.setStepRunner(createMock(StepRunner.class));
     builder.setArtifactCache(createMock(ArtifactCache.class));
-    builder.setJavaPackageFinder(createMock(JavaPackageFinder.class));
+    builder.setPackageFinder(createMock(PackageFinder.class));
     builder.setEventBus(BuckEventBusFactory.newInstance());
     builder.setClock(createMock(Clock.class));
     builder.setBuildId(createMock(BuildId.class));
@@ -100,7 +100,7 @@ public class BuildContextTest {
     builder.setActionGraph(createMock(ActionGraph.class));
     builder.setStepRunner(createMock(StepRunner.class));
     builder.setArtifactCache(createMock(ArtifactCache.class));
-    builder.setJavaPackageFinder(createMock(JavaPackageFinder.class));
+    builder.setPackageFinder(createMock(PackageFinder.class));
     builder.setEventBus(BuckEventBusFactory.newInstance());
     builder.setClock(createMock(Clock.class));
     builder.setBuildId(createMock(BuildId.class));
@@ -121,7 +121,7 @@ public class BuildContextTest {
     builder.setActionGraph(createMock(ActionGraph.class));
     builder.setStepRunner(createMock(StepRunner.class));
     builder.setArtifactCache(createMock(ArtifactCache.class));
-    builder.setJavaPackageFinder(createMock(JavaPackageFinder.class));
+    builder.setPackageFinder(createMock(PackageFinder.class));
     builder.setEventBus(BuckEventBusFactory.newInstance());
     builder.setClock(createMock(Clock.class));
     builder.setBuildId(createMock(BuildId.class));
@@ -148,7 +148,7 @@ public class BuildContextTest {
         .setActionGraph(createMock(ActionGraph.class))
         .setStepRunner(createMock(StepRunner.class))
         .setArtifactCache(createMock(ArtifactCache.class))
-        .setJavaPackageFinder(createMock(JavaPackageFinder.class))
+        .setPackageFinder(createMock(PackageFinder.class))
         .setClock(createMock(Clock.class))
         .setBuildId(createMock(BuildId.class))
         .setEventBus(eventBus)

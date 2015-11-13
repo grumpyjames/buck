@@ -20,7 +20,7 @@ import static com.facebook.buck.zip.ZipStep.DEFAULT_COMPRESSION_LEVEL;
 
 import com.facebook.buck.jvm.core.HasMavenCoordinates;
 import com.facebook.buck.jvm.core.HasSources;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.rules.AbstractBuildRule;
@@ -70,7 +70,7 @@ public class JavaSourceJar extends AbstractBuildRule implements HasMavenCoordina
   @Override
   public ImmutableList<Step> getBuildSteps(
       BuildContext context, BuildableContext buildableContext) {
-    JavaPackageFinder packageFinder = context.getJavaPackageFinder();
+    PackageFinder packageFinder = context.getPackageFinder();
 
     ImmutableList.Builder<Step> steps = ImmutableList.builder();
 

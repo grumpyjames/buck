@@ -18,9 +18,9 @@ package com.facebook.buck.jvm.java.intellij;
 
 import com.facebook.buck.io.MorePaths;
 import com.facebook.buck.io.ProjectFilesystem;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.jvm.java.DefaultJavaPackageFinder;
 import com.facebook.buck.jvm.java.JavaFileParser;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.util.Optionals;
 import com.google.common.base.Function;
@@ -42,7 +42,7 @@ import java.util.Map;
 public abstract class ParsingJavaPackageFinder {
 
   /**
-   * Creates a hybrid {@link JavaPackageFinder} which will resolve packages for the selected paths
+   * Creates a hybrid {@link PackageFinder} which will resolve packages for the selected paths
    * based on parsing the source files and use the fallbackPackageFinder for everything else.
    *
    * @param javaFileParser parser to read Java sources with.
@@ -52,11 +52,11 @@ public abstract class ParsingJavaPackageFinder {
    *                              source.
    * @return the described PackageFinder.
    */
-  public static JavaPackageFinder preparse(
+  public static PackageFinder preparse(
       final JavaFileParser javaFileParser,
       ProjectFilesystem projectFilesystem,
       ImmutableSet<Path> filesToParse,
-      JavaPackageFinder fallbackPackageFinder) {
+      PackageFinder fallbackPackageFinder) {
     PackagePathCache packagePathCache = new PackagePathCache();
     for (Path path : FluentIterable.from(filesToParse).toSortedSet(new PathComponentCountOrder())) {
       Optional<String> packageNameFromSource = Optionals.bind(
@@ -115,12 +115,12 @@ public abstract class ParsingJavaPackageFinder {
     }
   }
 
-  private static class CacheBasedPackageFinder implements JavaPackageFinder {
-    private JavaPackageFinder fallbackPackageFinder;
+  private static class CacheBasedPackageFinder implements PackageFinder {
+    private PackageFinder fallbackPackageFinder;
     private PackagePathCache packagePathCache;
 
     public CacheBasedPackageFinder(
-        JavaPackageFinder fallbackPackageFinder,
+        PackageFinder fallbackPackageFinder,
         PackagePathCache packagePathCache) {
       this.fallbackPackageFinder = fallbackPackageFinder;
       this.packagePathCache = packagePathCache;

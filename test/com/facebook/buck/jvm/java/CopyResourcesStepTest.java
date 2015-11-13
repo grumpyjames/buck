@@ -19,7 +19,7 @@ import static com.facebook.buck.util.BuckConstant.SCRATCH_PATH;
 import static org.junit.Assert.assertEquals;
 
 import com.facebook.buck.io.ProjectFilesystem;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargetFactory;
 import com.facebook.buck.rules.BuildRuleResolver;
@@ -46,7 +46,7 @@ public class CopyResourcesStepTest {
     // android/java/src/com/facebook/base/data.json
     // android/java/src/com/facebook/common/util/data.json
     BuildTarget buildTarget = BuildTargetFactory.newInstance("//android/java:resources");
-    JavaPackageFinder javaPackageFinder = createJavaPackageFinder();
+    PackageFinder packageFinder = createJavaPackageFinder();
     ProjectFilesystem filesystem = FakeProjectFilesystem.createJavaOnlyFilesystem();
 
     CopyResourcesStep step = new CopyResourcesStep(
@@ -57,7 +57,7 @@ public class CopyResourcesStepTest {
             new TestSourcePath("android/java/src/com/facebook/base/data.json"),
             new TestSourcePath("android/java/src/com/facebook/common/util/data.json")),
         SCRATCH_PATH.resolve("android/java/lib__resources__classes"),
-        javaPackageFinder);
+        packageFinder);
 
     List<? extends Step> expected = ImmutableList.of(
         new MkdirAndSymlinkFileStep(
@@ -80,7 +80,7 @@ public class CopyResourcesStepTest {
     // android/java/src/com/facebook/base/data.json
     // android/java/src/com/facebook/common/util/data.json
     BuildTarget buildTarget = BuildTargetFactory.newInstance("//android/java/src:resources");
-    JavaPackageFinder javaPackageFinder = createJavaPackageFinder();
+    PackageFinder packageFinder = createJavaPackageFinder();
     ProjectFilesystem filesystem = FakeProjectFilesystem.createJavaOnlyFilesystem();
 
     CopyResourcesStep step = new CopyResourcesStep(
@@ -91,7 +91,7 @@ public class CopyResourcesStepTest {
             new TestSourcePath("android/java/src/com/facebook/base/data.json"),
             new TestSourcePath("android/java/src/com/facebook/common/util/data.json")),
         SCRATCH_PATH.resolve("android/java/src/lib__resources__classes"),
-        javaPackageFinder);
+        packageFinder);
 
     List<? extends Step> expected = ImmutableList.of(
         new MkdirAndSymlinkFileStep(
@@ -115,7 +115,7 @@ public class CopyResourcesStepTest {
     // android/java/src/com/facebook/common/util/data.json
     BuildTarget buildTarget =
         BuildTargetFactory.newInstance("//android/java/src/com/facebook:resources");
-    JavaPackageFinder javaPackageFinder = createJavaPackageFinder();
+    PackageFinder packageFinder = createJavaPackageFinder();
     ProjectFilesystem filesystem = FakeProjectFilesystem.createJavaOnlyFilesystem();
 
     CopyResourcesStep step = new CopyResourcesStep(
@@ -126,7 +126,7 @@ public class CopyResourcesStepTest {
             new TestSourcePath("android/java/src/com/facebook/base/data.json"),
             new TestSourcePath("android/java/src/com/facebook/common/util/data.json")),
         SCRATCH_PATH.resolve("android/java/src/com/facebook/lib__resources__classes"),
-        javaPackageFinder);
+        packageFinder);
 
     List<? extends Step> expected = ImmutableList.of(
         new MkdirAndSymlinkFileStep(
@@ -144,7 +144,7 @@ public class CopyResourcesStepTest {
     assertEquals(expected, step.buildSteps());
   }
 
-  private JavaPackageFinder createJavaPackageFinder() {
+  private PackageFinder createJavaPackageFinder() {
     return DefaultJavaPackageFinder.createDefaultJavaPackageFinder(
         ImmutableSet.of("/android/java/src"));
   }

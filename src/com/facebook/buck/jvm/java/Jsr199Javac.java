@@ -377,7 +377,7 @@ public abstract class Jsr199Javac implements Javac {
       ProjectFilesystem filesystem) {
     JavacErrorParser javacErrorParser = new JavacErrorParser(
         filesystem,
-        context.getJavaPackageFinder());
+        context.getPackageFinder());
     Optional<String> symbol = javacErrorParser.getMissingSymbolFromCompilerError(
         DiagnosticPrettyPrinter.format(diagnostic));
     if (!symbol.isPresent()) {

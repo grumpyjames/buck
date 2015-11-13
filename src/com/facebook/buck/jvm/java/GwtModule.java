@@ -79,7 +79,7 @@ public class GwtModule extends AbstractBuildRule {
             getBuildTarget(),
             filesForGwtModule,
             tempJarFolder,
-            context.getJavaPackageFinder()));
+            context.getPackageFinder()));
 
     steps.add(
         new JarDirectoryStep(

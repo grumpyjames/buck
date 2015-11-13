@@ -29,9 +29,9 @@ import com.facebook.buck.android.NdkLibrary;
 import com.facebook.buck.android.NdkLibraryBuilder;
 import com.facebook.buck.cli.FakeBuckConfig;
 import com.facebook.buck.io.ProjectFilesystem;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.jvm.java.FakeJavaPackageFinder;
 import com.facebook.buck.jvm.java.JavaLibraryBuilder;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.jvm.java.JavaTestBuilder;
 import com.facebook.buck.jvm.java.KeystoreBuilder;
 import com.facebook.buck.jvm.java.PrebuiltJarBuilder;
@@ -89,7 +89,7 @@ public class ProjectTest {
    * for each of the android_binary rules.
    */
   public ProjectWithModules createActionGraphForTesting(
-      @Nullable JavaPackageFinder javaPackageFinder) throws IOException {
+      @Nullable PackageFinder packageFinder) throws IOException {
     BuildRuleResolver ruleResolver = new BuildRuleResolver();
 
     // prebuilt_jar //third_party/guava:guava
@@ -213,7 +213,7 @@ public class ProjectTest {
             projectConfigForResource,
             projectConfigUsingNoDx,
             projectConfig),
-        javaPackageFinder);
+        packageFinder);
   }
 
   @Test
@@ -231,16 +231,16 @@ public class ProjectTest {
    */
   @Test
   public void testProject() throws IOException {
-    JavaPackageFinder javaPackageFinder = EasyMock.createMock(JavaPackageFinder.class);
+    PackageFinder packageFinder = EasyMock.createMock(PackageFinder.class);
     EasyMock
-        .expect(javaPackageFinder.findJavaPackage(Paths.get("foo/module_foo.iml")))
+        .expect(packageFinder.findJavaPackage(Paths.get("foo/module_foo.iml")))
         .andReturn("");
     EasyMock
-        .expect(javaPackageFinder.findJavaPackage(Paths.get("bar/module_bar.iml")))
+        .expect(packageFinder.findJavaPackage(Paths.get("bar/module_bar.iml")))
         .andReturn("");
-    EasyMock.replay(javaPackageFinder);
+    EasyMock.replay(packageFinder);
 
-    ProjectWithModules projectWithModules = createActionGraphForTesting(javaPackageFinder);
+    ProjectWithModules projectWithModules = createActionGraphForTesting(packageFinder);
     Project project = projectWithModules.project;
     ActionGraph actionGraph = project.getActionGraph();
     List<SerializableModule> modules = projectWithModules.modules;
@@ -636,7 +636,7 @@ public class ProjectTest {
     ProjectWithModules projectWithModules1 = getModulesForActionGraph(
         ruleResolver1,
         ImmutableSortedSet.of(projectConfigNullSrcRoots),
-        null /* javaPackageFinder */);
+        null /* packageFinder */);
 
     // Verify that the correct source folders are created.
     assertEquals(1, projectWithModules1.modules.size());
@@ -659,18 +659,18 @@ public class ProjectTest {
         .build(ruleResolver2);
 
     // Verify that the correct source folders are created.
-    JavaPackageFinder javaPackageFinder = EasyMock.createMock(JavaPackageFinder.class);
+    PackageFinder packageFinder = EasyMock.createMock(PackageFinder.class);
     EasyMock
         .expect(
-            javaPackageFinder.findJavaPackage(
+            packageFinder.findJavaPackage(
                 Paths.get("java/com/example/base/module_java_com_example_base.iml")))
         .andReturn("com.example.base");
-    EasyMock.replay(javaPackageFinder);
+    EasyMock.replay(packageFinder);
     ProjectWithModules projectWithModules2 = getModulesForActionGraph(
         ruleResolver2,
         ImmutableSortedSet.of(inPackageProjectConfig),
-        javaPackageFinder);
-    EasyMock.verify(javaPackageFinder);
+        packageFinder);
+    EasyMock.verify(packageFinder);
     assertEquals(1, projectWithModules2.modules.size());
     SerializableModule moduleWithPackagePrefix = projectWithModules2.modules.get(0);
     assertListEquals(
@@ -695,7 +695,7 @@ public class ProjectTest {
     ProjectWithModules projectWithModules3 = getModulesForActionGraph(
         ruleResolver3,
         ImmutableSortedSet.of(hasSrcFolderProjectConfig),
-        null /* javaPackageFinder */);
+        null /* packageFinder */);
 
     // Verify that the correct source folders are created.
     assertEquals(1, projectWithModules3.modules.size());
@@ -720,9 +720,9 @@ public class ProjectTest {
   private ProjectWithModules getModulesForActionGraph(
       BuildRuleResolver ruleResolver,
       ImmutableSortedSet<ProjectConfig> projectConfigs,
-      @Nullable JavaPackageFinder javaPackageFinder) throws IOException {
-    if (javaPackageFinder == null) {
-      javaPackageFinder = new FakeJavaPackageFinder();
+      @Nullable PackageFinder packageFinder) throws IOException {
+    if (packageFinder == null) {
+      packageFinder = new FakeJavaPackageFinder();
     }
 
     ActionGraph actionGraph = RuleMap.createGraphFromBuildRules(ruleResolver);
@@ -753,7 +753,7 @@ public class ProjectTest {
         projectConfigs,
         actionGraph,
         basePathToAliasMap,
-        javaPackageFinder,
+        packageFinder,
         executionContext,
         new InMemoryBuildFileTree(
             Iterables.transform(

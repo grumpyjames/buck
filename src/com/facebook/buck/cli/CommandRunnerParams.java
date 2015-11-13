@@ -17,11 +17,11 @@
 package com.facebook.buck.cli;
 
 import com.facebook.buck.android.AndroidPlatformTarget;
+import com.facebook.buck.artifact_cache.ArtifactCache;
 import com.facebook.buck.event.BuckEventBus;
 import com.facebook.buck.httpserver.WebServer;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.parser.Parser;
-import com.facebook.buck.artifact_cache.ArtifactCache;
 import com.facebook.buck.rules.Cell;
 import com.facebook.buck.step.ExecutionContext;
 import com.facebook.buck.timing.Clock;
@@ -47,7 +47,7 @@ class CommandRunnerParams {
   private final Platform platform;
   private final Supplier<AndroidPlatformTarget> androidPlatformTargetSupplier;
   private final Cell cell;
-  private final JavaPackageFinder javaPackageFinder;
+  private final PackageFinder packageFinder;
   private final ObjectMapper objectMapper;
   private final Clock clock;
   private final Optional<ProcessManager> processManager;
@@ -64,7 +64,7 @@ class CommandRunnerParams {
       Parser parser,
       Platform platform,
       ImmutableMap<String, String> environment,
-      JavaPackageFinder javaPackageFinder,
+      PackageFinder packageFinder,
       ObjectMapper objectMapper,
       Clock clock,
       Optional<ProcessManager> processManager,
@@ -79,7 +79,7 @@ class CommandRunnerParams {
     this.platform = platform;
     this.androidPlatformTargetSupplier = androidPlatformTargetSupplier;
     this.environment = environment;
-    this.javaPackageFinder = javaPackageFinder;
+    this.packageFinder = packageFinder;
     this.objectMapper = objectMapper;
     this.clock = clock;
     this.processManager = processManager;
@@ -120,8 +120,8 @@ class CommandRunnerParams {
     return environment;
   }
 
-  public JavaPackageFinder getJavaPackageFinder() {
-    return javaPackageFinder;
+  public PackageFinder getPackageFinder() {
+    return packageFinder;
   }
 
   public ObjectMapper getObjectMapper() {
@@ -155,7 +155,7 @@ class CommandRunnerParams {
         .setEventBus(eventBus)
         .setPlatform(platform)
         .setEnvironment(environment)
-        .setJavaPackageFinder(javaPackageFinder)
+        .setPackageFinder(packageFinder)
         .setObjectMapper(objectMapper)
         .build();
   }

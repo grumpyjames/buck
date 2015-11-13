@@ -26,7 +26,7 @@ import com.facebook.buck.graph.TopologicalSort;
 import com.facebook.buck.io.ProjectFilesystem;
 import com.facebook.buck.jvm.core.HasClasspathEntries;
 import com.facebook.buck.jvm.core.JvmLibrary;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.model.HasTests;
@@ -515,7 +515,7 @@ public class DefaultJavaLibrary extends AbstractBuildRule
     steps.add(mkdir);
 
     // If there are resources, then link them to the appropriate place in the classes directory.
-    JavaPackageFinder finder = context.getJavaPackageFinder();
+    PackageFinder finder = context.getPackageFinder();
     if (resourcesRoot.isPresent()) {
       finder = new ResourcesRootPackageFinder(resourcesRoot.get(), finder);
     }

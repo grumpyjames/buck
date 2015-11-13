@@ -25,8 +25,8 @@ import com.facebook.buck.artifact_cache.ArtifactCache;
 import com.facebook.buck.event.BuckEventBusFactory;
 import com.facebook.buck.io.MorePathsForTests;
 import com.facebook.buck.io.ProjectFilesystem;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.jvm.java.JavaLibraryBuilder;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.jvm.java.Keystore;
 import com.facebook.buck.jvm.java.KeystoreBuilder;
 import com.facebook.buck.model.BuildId;
@@ -163,7 +163,7 @@ public class ApkGenruleTest {
         .setClock(EasyMock.createMock(Clock.class))
         .setBuildId(EasyMock.createMock(BuildId.class))
         .setArtifactCache(EasyMock.createMock(ArtifactCache.class))
-        .setJavaPackageFinder(EasyMock.createNiceMock(JavaPackageFinder.class))
+        .setPackageFinder(EasyMock.createNiceMock(PackageFinder.class))
         .setEventBus(BuckEventBusFactory.newInstance())
         .build();
     Iterable<Path> expectedInputsToCompareToOutputs = ImmutableList.of(

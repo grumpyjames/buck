@@ -17,7 +17,7 @@
 package com.facebook.buck.jvm.java.intellij;
 
 import com.facebook.buck.io.ProjectFilesystem;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.rules.TargetNode;
 import com.facebook.buck.util.immutables.BuckStyleImmutable;
 import com.google.common.annotations.VisibleForTesting;
@@ -52,7 +52,7 @@ import javax.annotation.Nullable;
 @VisibleForTesting
 public class IjProjectTemplateDataPreparer {
 
-  private JavaPackageFinder javaPackageFinder;
+  private PackageFinder packageFinder;
   private IjModuleGraph moduleGraph;
   private ProjectFilesystem projectFilesystem;
   private IjSourceRootSimplifier sourceRootSimplifier;
@@ -62,13 +62,13 @@ public class IjProjectTemplateDataPreparer {
   private ImmutableSet<IjLibrary> librariesToBeWritten;
 
   public IjProjectTemplateDataPreparer(
-      JavaPackageFinder javaPackageFinder,
+      PackageFinder packageFinder,
       IjModuleGraph moduleGraph,
       ProjectFilesystem projectFilesystem) {
-    this.javaPackageFinder = javaPackageFinder;
+    this.packageFinder = packageFinder;
     this.moduleGraph = moduleGraph;
     this.projectFilesystem = projectFilesystem;
-    this.sourceRootSimplifier = new IjSourceRootSimplifier(javaPackageFinder);
+    this.sourceRootSimplifier = new IjSourceRootSimplifier(packageFinder);
     this.modulesToBeWritten = createModulesToBeWritten(moduleGraph);
     this.librariesToBeWritten =
         FluentIterable.from(moduleGraph.getNodes()).filter(IjLibrary.class).toSet();
@@ -232,7 +232,7 @@ public class IjProjectTemplateDataPreparer {
     } else {
       fileToLookupPackageIn = folder.getPath().resolve("notfound");
     }
-    String packagePrefix = javaPackageFinder.findJavaPackage(fileToLookupPackageIn);
+    String packagePrefix = packageFinder.findJavaPackage(fileToLookupPackageIn);
     if (packagePrefix.isEmpty()) {
       // It doesn't matter either way, but an empty prefix looks confusing.
       return null;

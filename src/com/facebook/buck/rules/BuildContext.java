@@ -23,7 +23,7 @@ import com.facebook.buck.event.BuckEventBus;
 import com.facebook.buck.event.ConsoleEvent;
 import com.facebook.buck.event.ThrowableConsoleEvent;
 import com.facebook.buck.io.ProjectFilesystem;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.model.BuildId;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.step.StepRunner;
@@ -73,7 +73,7 @@ public abstract class BuildContext {
 
   protected abstract Clock getClock();
   public abstract ArtifactCache getArtifactCache();
-  public abstract JavaPackageFinder getJavaPackageFinder();
+  public abstract PackageFinder getPackageFinder();
   public abstract BuckEventBus getEventBus();
 
   @Value.Default

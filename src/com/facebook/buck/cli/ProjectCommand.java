@@ -30,10 +30,10 @@ import com.facebook.buck.event.ConsoleEvent;
 import com.facebook.buck.event.ProjectGenerationEvent;
 import com.facebook.buck.io.ExecutableFinder;
 import com.facebook.buck.json.BuildFileParseException;
+import com.facebook.buck.jvm.core.PackageFinder;
 import com.facebook.buck.jvm.java.JavaBuckConfig;
 import com.facebook.buck.jvm.java.JavaFileParser;
 import com.facebook.buck.jvm.java.JavaLibraryDescription;
-import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.jvm.java.JavacOptions;
 import com.facebook.buck.jvm.java.intellij.IjModuleGraph;
 import com.facebook.buck.jvm.java.intellij.IjProject;
@@ -237,7 +237,7 @@ public class ProjectCommand extends BuildCommand {
     return buckConfig.getBasePathToAliasMap();
   }
 
-  public JavaPackageFinder getJavaPackageFinder(BuckConfig buckConfig) {
+  public PackageFinder getJavaPackageFinder(BuckConfig buckConfig) {
     return buckConfig.createDefaultJavaPackageFinder();
   }
 
