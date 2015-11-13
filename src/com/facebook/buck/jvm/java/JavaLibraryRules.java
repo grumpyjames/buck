@@ -20,7 +20,7 @@ import com.facebook.buck.cxx.CxxPlatform;
 import com.facebook.buck.graph.AbstractBreadthFirstTraversal;
 import com.facebook.buck.jvm.core.HasJavaAbi;
 import com.facebook.buck.jvm.core.JvmLibrary;
-import com.facebook.buck.jvm.core.JavaNativeLinkable;
+import com.facebook.buck.jvm.core.JvmNativeLinkable;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.rules.BuildRule;
@@ -104,11 +104,11 @@ public class JavaLibraryRules {
     new AbstractBreadthFirstTraversal<BuildRule>(deps) {
       @Override
       public ImmutableSet<BuildRule> visit(BuildRule rule) {
-        if (rule instanceof JavaNativeLinkable) {
-          JavaNativeLinkable linkable = (JavaNativeLinkable) rule;
+        if (rule instanceof JvmNativeLinkable) {
+          JvmNativeLinkable linkable = (JvmNativeLinkable) rule;
           libraries.putAll(linkable.getSharedLibraries(targetGraph, cxxPlatform));
         }
-        if (rule instanceof JavaNativeLinkable ||
+        if (rule instanceof JvmNativeLinkable ||
             rule instanceof JvmLibrary) {
           return rule.getDeps();
         } else {

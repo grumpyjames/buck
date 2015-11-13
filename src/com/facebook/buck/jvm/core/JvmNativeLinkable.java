@@ -22,9 +22,9 @@ import com.facebook.buck.rules.TargetGraph;
 import com.google.common.collect.ImmutableMap;
 
 /**
- * Represents components which contribute native shared libraries to a Java-based package.
+ * Represents components which contribute native shared libraries to a jvm language library.
  */
-public interface JavaNativeLinkable {
+public interface JvmNativeLinkable {
 
   /**
    * @return a map of shared library SONAME to shared library path for the given

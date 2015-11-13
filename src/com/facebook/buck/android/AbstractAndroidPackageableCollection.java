@@ -17,7 +17,7 @@
 package com.facebook.buck.android;
 
 import com.facebook.buck.jvm.core.JvmLibrary;
-import com.facebook.buck.jvm.core.JavaNativeLinkable;
+import com.facebook.buck.jvm.core.JvmNativeLinkable;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.rules.SourcePath;
 import com.facebook.buck.rules.coercer.BuildConfigFields;
@@ -85,12 +85,12 @@ interface AbstractAndroidPackageableCollection {
   /**
    * Native libraries.
    */
-  List<JavaNativeLinkable> getNativeLinkables();
+  List<JvmNativeLinkable> getNativeLinkables();
 
   /**
    * Native libraries to be packaged as assets.
    */
-  List<JavaNativeLinkable> getNativeLinkablesAssets();
+  List<JvmNativeLinkable> getNativeLinkablesAssets();
 
   /**
    * Directories containing native libraries.
