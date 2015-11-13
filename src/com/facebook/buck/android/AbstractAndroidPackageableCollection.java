@@ -16,7 +16,7 @@
 
 package com.facebook.buck.android;
 
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.core.JavaNativeLinkable;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.rules.SourcePath;
@@ -134,13 +134,13 @@ interface AbstractAndroidPackageableCollection {
   ImmutableSet<SourcePath> getPathsToThirdPartyJars();
 
   /**
-   * {@link JavaLibrary} rules whose output will be dexed and included in
+   * {@link JvmLibrary} rules whose output will be dexed and included in
    * the package.
    */
   Set<BuildTarget> getJavaLibrariesToDex();
 
   /**
-   * See {@link JavaLibrary#getClassNamesToHashes()}
+   * See {@link JvmLibrary#getClassNamesToHashes()}
    */
   Supplier<Map<String, HashCode>> getClassNamesToHashesSupplier();
 }

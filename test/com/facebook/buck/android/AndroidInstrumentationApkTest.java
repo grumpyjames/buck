@@ -20,8 +20,8 @@ import static com.facebook.buck.jvm.java.JavaCompilationConstants.DEFAULT_JAVAC_
 import static org.junit.Assert.assertEquals;
 
 import com.facebook.buck.cli.FakeBuckConfig;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.FakeJavaLibrary;
-import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.jvm.java.KeystoreBuilder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargetFactory;
@@ -59,8 +59,8 @@ public class AndroidInstrumentationApkTest {
         pathResolver,
         /* deps */ ImmutableSortedSet.of((BuildRule) javaLibrary1)) {
       @Override
-      public ImmutableSetMultimap<JavaLibrary, Path> getTransitiveClasspathEntries() {
-        ImmutableSetMultimap.Builder<JavaLibrary, Path> builder =
+      public ImmutableSetMultimap<JvmLibrary, Path> getTransitiveClasspathEntries() {
+        ImmutableSetMultimap.Builder<JvmLibrary, Path> builder =
             ImmutableSetMultimap.builder();
         builder.put(javaLibrary1, javaLibrary1.getPathToOutput());
         builder.put(this, this.getPathToOutput());
@@ -76,8 +76,8 @@ public class AndroidInstrumentationApkTest {
         pathResolver,
         /* deps */ ImmutableSortedSet.of((BuildRule) javaLibrary3)) {
       @Override
-      public ImmutableSetMultimap<JavaLibrary, Path> getTransitiveClasspathEntries() {
-        ImmutableSetMultimap.Builder<JavaLibrary, Path> builder =
+      public ImmutableSetMultimap<JvmLibrary, Path> getTransitiveClasspathEntries() {
+        ImmutableSetMultimap.Builder<JvmLibrary, Path> builder =
             ImmutableSetMultimap.builder();
         builder.put(javaLibrary3, javaLibrary3.getPathToOutput());
         builder.put(this, this.getPathToOutput());

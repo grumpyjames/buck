@@ -29,16 +29,16 @@ import com.google.common.hash.HashCode;
 
 import java.nio.file.Path;
 
-public interface JavaLibrary extends BuildRule, HasClasspathEntries,
+public interface JvmLibrary extends BuildRule, HasClasspathEntries,
     HasJavaAbi, HasJavaClassHashes, HasMavenCoordinates, HasSources {
 
   /**
    * This Buildable is expected to support the GWT flavor, which is a {@link BuildRule} whose output
    * file is a JAR containing the files necessary to use
-   * this {@link JavaLibrary} as a GWT module. Normally, this includes Java source code, a .gwt.xml
+   * this {@link JvmLibrary} as a GWT module. Normally, this includes Java source code, a .gwt.xml
    * file, and static resources, such as stylesheets and image files.
    * <p/>
-   * In the event that this {@link JavaLibrary} cannot be represented as a GWT module (for example,
+   * In the event that this {@link JvmLibrary} cannot be represented as a GWT module (for example,
    * if it has no {@code srcs} or {@code resources} of its own, but only exists to export deps),
    * then the flavor will be {@link Optional#absent()}.
    * <p/>
@@ -52,7 +52,7 @@ public interface JavaLibrary extends BuildRule, HasClasspathEntries,
   public static final Flavor GWT_MODULE_FLAVOR = ImmutableFlavor.of("gwt_module");
 
   /**
-   * It's possible to ask a {@link JavaLibrary} to collect its own sources and build a source jar.
+   * It's possible to ask a {@link JvmLibrary} to collect its own sources and build a source jar.
    */
   public static final Flavor SRC_JAR = ImmutableFlavor.of("src");
 
@@ -73,20 +73,20 @@ public interface JavaLibrary extends BuildRule, HasClasspathEntries,
    * dependencies of these rules.
    */
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getTransitiveClasspathEntries();
+  public ImmutableSetMultimap<JvmLibrary, Path> getTransitiveClasspathEntries();
 
   /**
    * @return The set of entries to pass to {@code javac}'s {@code -classpath} flag in order to
    * compile the {@code srcs} associated with this rule.  This set only contains the classpath
    * entries for those rules that are declared as direct dependencies of this rule.
    */
-  public ImmutableSetMultimap<JavaLibrary, Path> getDeclaredClasspathEntries();
+  public ImmutableSetMultimap<JvmLibrary, Path> getDeclaredClasspathEntries();
 
   /**
    * @return The set of entries to pass to {@code javac}'s {@code -classpath} flag in order to
    * compile rules that depend on this rule.
    */
-  public ImmutableSetMultimap<JavaLibrary, Path> getOutputClasspathEntries();
+  public ImmutableSetMultimap<JvmLibrary, Path> getOutputClasspathEntries();
 
   public ImmutableSortedSet<Path> getJavaSrcs();
 

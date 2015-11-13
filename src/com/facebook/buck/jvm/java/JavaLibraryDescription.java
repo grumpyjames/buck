@@ -17,7 +17,7 @@
 package com.facebook.buck.jvm.java;
 
 import com.facebook.buck.io.ProjectFilesystem;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.maven.AetherUtil;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.Either;
@@ -54,8 +54,8 @@ public class JavaLibraryDescription implements Description<JavaLibraryDescriptio
 
   public static final BuildRuleType TYPE = BuildRuleType.of("java_library");
   public static final ImmutableSet<Flavor> SUPPORTED_FLAVORS = ImmutableSet.of(
-      JavaLibrary.SRC_JAR,
-      JavaLibrary.MAVEN_JAR);
+      JvmLibrary.SRC_JAR,
+      JvmLibrary.MAVEN_JAR);
 
   @VisibleForTesting
   final JavacOptions defaultOptions;
@@ -93,16 +93,16 @@ public class JavaLibraryDescription implements Description<JavaLibraryDescriptio
 
     ImmutableSortedSet<Flavor> flavors = target.getFlavors();
     BuildRuleParams paramsWithMavenFlavor = null;
-    if (flavors.contains(JavaLibrary.MAVEN_JAR)) {
+    if (flavors.contains(JvmLibrary.MAVEN_JAR)) {
       paramsWithMavenFlavor = params;
 
       // Maven rules will depend upon their vanilla versions, so the latter have to be constructed
       // without the maven flavor to prevent output-path conflict
       params = params.copyWithBuildTarget(
-          params.getBuildTarget().withoutFlavors(ImmutableSet.of(JavaLibrary.MAVEN_JAR)));
+          params.getBuildTarget().withoutFlavors(ImmutableSet.of(JvmLibrary.MAVEN_JAR)));
     }
 
-    if (flavors.contains(JavaLibrary.SRC_JAR)) {
+    if (flavors.contains(JvmLibrary.SRC_JAR)) {
       args.mavenCoords = args.mavenCoords.transform(
           new Function<String, String>() {
             @Override
@@ -111,7 +111,7 @@ public class JavaLibraryDescription implements Description<JavaLibraryDescriptio
             }
           });
 
-      if (!flavors.contains(JavaLibrary.MAVEN_JAR)) {
+      if (!flavors.contains(JvmLibrary.MAVEN_JAR)) {
         return new JavaSourceJar(
             params,
             pathResolver,
@@ -182,7 +182,7 @@ public class JavaLibraryDescription implements Description<JavaLibraryDescriptio
         params,
         args);
 
-    if (!flavors.contains(JavaLibrary.MAVEN_JAR)) {
+    if (!flavors.contains(JvmLibrary.MAVEN_JAR)) {
       return defaultJavaLibrary;
     } else {
       return MavenUberJar.create(
@@ -271,7 +271,7 @@ public class JavaLibraryDescription implements Description<JavaLibraryDescriptio
   }
 
   /**
-   * Creates a {@link BuildRule} with the {@link JavaLibrary#GWT_MODULE_FLAVOR}, if appropriate.
+   * Creates a {@link BuildRule} with the {@link JvmLibrary#GWT_MODULE_FLAVOR}, if appropriate.
    * <p>
    * If {@code arg.srcs} or {@code arg.resources} is non-empty, then the return value will not be
    * absent.
@@ -292,7 +292,7 @@ public class JavaLibraryDescription implements Description<JavaLibraryDescriptio
 
     BuildTarget gwtModuleBuildTarget = BuildTarget.of(
         libraryTarget.getUnflavoredBuildTarget(),
-        ImmutableSet.of(JavaLibrary.GWT_MODULE_FLAVOR));
+        ImmutableSet.of(JvmLibrary.GWT_MODULE_FLAVOR));
     ImmutableSortedSet<SourcePath> filesForGwtModule = ImmutableSortedSet
         .<SourcePath>naturalOrder()
         .addAll(arg.srcs.get())

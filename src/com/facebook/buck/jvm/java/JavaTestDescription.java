@@ -19,7 +19,7 @@ package com.facebook.buck.jvm.java;
 import com.facebook.buck.cxx.CxxDescriptionEnhancer;
 import com.facebook.buck.cxx.CxxPlatform;
 import com.facebook.buck.cxx.NativeLinkable;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.HasSourceUnderTest;
 import com.facebook.buck.rules.BuildRule;
@@ -167,7 +167,7 @@ public class JavaTestDescription implements Description<JavaTestDescription.Arg>
     ImmutableSet.Builder<BuildRule> sourceUnderTest = ImmutableSet.builder();
     for (BuildTarget target : sourceUnderTestTargets) {
       BuildRule rule = resolver.getRule(target);
-      if (!(rule instanceof JavaLibrary)) {
+      if (!(rule instanceof JvmLibrary)) {
         // In this case, the source under test specified in the build file was not a Java library
         // rule. Since EMMA requires the sources to be in Java, we will throw this exception and
         // not continue with the tests.
@@ -249,7 +249,7 @@ public class JavaTestDescription implements Description<JavaTestDescription.Arg>
           cxxPlatform,
           Predicates.or(
               Predicates.instanceOf(NativeLinkable.class),
-              Predicates.instanceOf(JavaLibrary.class)));
+              Predicates.instanceOf(JvmLibrary.class)));
     }
   }
 }

@@ -23,7 +23,7 @@ import com.facebook.buck.android.NdkCxxPlatforms.TargetCpuType;
 import com.facebook.buck.jvm.java.Classpaths;
 import com.facebook.buck.jvm.core.HasClasspathEntries;
 import com.facebook.buck.jvm.java.JarDirectoryStep;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.rules.AbstractBuildRule;
@@ -175,12 +175,12 @@ public class AndroidAar extends AbstractBuildRule implements HasClasspathEntries
   }
 
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getTransitiveClasspathEntries() {
+  public ImmutableSetMultimap<JvmLibrary, Path> getTransitiveClasspathEntries() {
     return Classpaths.getClasspathEntries(getDeps());
   }
 
   @Override
-  public ImmutableSet<JavaLibrary> getTransitiveClasspathDeps() {
+  public ImmutableSet<JvmLibrary> getTransitiveClasspathDeps() {
     return Classpaths.getClasspathDeps(getDeps());
   }
 

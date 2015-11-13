@@ -35,7 +35,7 @@ import com.facebook.buck.event.BuckEventBusFactory;
 import com.facebook.buck.io.MorePaths;
 import com.facebook.buck.io.ProjectFilesystem;
 import com.facebook.buck.jvm.core.HasClasspathEntries;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.jvm.java.abi.AbiWriterProtocol;
 import com.facebook.buck.model.BuildId;
@@ -368,26 +368,26 @@ public class DefaultJavaLibraryTest {
       }
 
       @Override
-      public ImmutableSetMultimap<JavaLibrary, Path> getDeclaredClasspathEntries() {
+      public ImmutableSetMultimap<JvmLibrary, Path> getDeclaredClasspathEntries() {
         return ImmutableSetMultimap.of(
-            (JavaLibrary) this,
+            (JvmLibrary) this,
             Paths.get("java/src/com/libone/bar.jar"));
       }
 
       @Override
-      public ImmutableSetMultimap<JavaLibrary, Path> getOutputClasspathEntries() {
+      public ImmutableSetMultimap<JvmLibrary, Path> getOutputClasspathEntries() {
         return ImmutableSetMultimap.of(
-            (JavaLibrary) this,
+            (JvmLibrary) this,
             Paths.get("java/src/com/libone/bar.jar"));
       }
 
       @Override
-      public ImmutableSetMultimap<JavaLibrary, Path> getTransitiveClasspathEntries() {
+      public ImmutableSetMultimap<JvmLibrary, Path> getTransitiveClasspathEntries() {
         return ImmutableSetMultimap.of();
       }
 
       @Override
-      public ImmutableSet<JavaLibrary> getTransitiveClasspathDeps() {
+      public ImmutableSet<JvmLibrary> getTransitiveClasspathDeps() {
         return ImmutableSet.of();
       }
     };
@@ -424,7 +424,7 @@ public class DefaultJavaLibraryTest {
             " should contain only bar.jar.",
         ImmutableSet.of(Paths.get("java/src/com/libone/bar.jar")),
         ImmutableSet.copyOf(
-            ((JavaLibrary) libraryTwo).getDeclaredClasspathEntries().values()));
+            ((JvmLibrary) libraryTwo).getDeclaredClasspathEntries().values()));
     assertEquals(
         "The classpath for the javac step to compile //:libtwo should contain only bar.jar.",
         ImmutableSet.of(Paths.get("java/src/com/libone/bar.jar")),
@@ -562,7 +562,7 @@ public class DefaultJavaLibraryTest {
     assertEquals(
         "A java_binary that depends on //:parent should include libone.jar, libtwo.jar and " +
             "parent.jar.",
-        ImmutableSetMultimap.<JavaLibrary, Path>builder()
+        ImmutableSetMultimap.<JvmLibrary, Path>builder()
             .put(
                 getJavaLibrary(included),
                 Paths.get("buck-out/gen/lib__included__output/included.jar"))
@@ -586,7 +586,7 @@ public class DefaultJavaLibraryTest {
     assertThat(
         getJavaLibrary(parent).getTransitiveClasspathDeps(),
         Matchers.equalTo(
-            ImmutableSet.<JavaLibrary>builder()
+            ImmutableSet.<JvmLibrary>builder()
                 .add(getJavaLibrary(included))
                 .add(getJavaLibrary(notIncluded))
                 .add(getJavaLibrary(libraryOne))
@@ -653,8 +653,8 @@ public class DefaultJavaLibraryTest {
             .setCmd("something")
             .build(resolver, filesystem);
     filesystem.writeContentsToPath("class Test {}", genSrc.getPathToOutput());
-    JavaLibrary library =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+    JvmLibrary library =
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .addSrc(new BuildTargetSourcePath(genSrc.getBuildTarget()))
             .build(resolver, filesystem);
     InputBasedRuleKeyBuilderFactory factory =
@@ -673,7 +673,7 @@ public class DefaultJavaLibraryTest {
             .setCmd("something else")
             .build(resolver, filesystem);
     library =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .addSrc(new BuildTargetSourcePath(genSrc.getBuildTarget()))
             .build(resolver, filesystem);
     factory =
@@ -692,7 +692,7 @@ public class DefaultJavaLibraryTest {
             .build(resolver, filesystem);
     filesystem.writeContentsToPath("class Test2 {}", genSrc.getPathToOutput());
     library =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .addSrc(new BuildTargetSourcePath(genSrc.getBuildTarget()))
             .build(resolver, filesystem);
     factory =
@@ -713,16 +713,16 @@ public class DefaultJavaLibraryTest {
     // Setup a Java library which builds against another Java library dep.
     BuildRuleResolver resolver = new BuildRuleResolver();
     SourcePathResolver pathResolver = new SourcePathResolver(resolver);
-    JavaLibrary dep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
+    JvmLibrary dep =
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
             .addSrc(Paths.get("Source.java"))
             .build(resolver, filesystem);
     filesystem.writeContentsToPath("JAR contents", dep.getPathToOutput());
     filesystem.writeContentsToPath(
         "ABI JAR contents",
         pathResolver.deprecatedGetPath(dep.getAbiJar().get()));
-    JavaLibrary library =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+    JvmLibrary library =
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .addDep(dep.getBuildTarget())
             .build(resolver, filesystem);
     InputBasedRuleKeyBuilderFactory factory =
@@ -736,13 +736,13 @@ public class DefaultJavaLibraryTest {
     // of the consuming java library, since it only cares about the contents of the ABI JAR.
     resolver = new BuildRuleResolver();
     dep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
             .addSrc(Paths.get("Source.java"))
             .setResourcesRoot(Paths.get("some root that changes the rule key"))
             .build(resolver, filesystem);
     filesystem.writeContentsToPath("different JAR contents", dep.getPathToOutput());
     library =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .addDep(dep.getBuildTarget())
             .build(resolver, filesystem);
     factory =
@@ -757,14 +757,14 @@ public class DefaultJavaLibraryTest {
     resolver = new BuildRuleResolver();
     pathResolver = new SourcePathResolver(resolver);
     dep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
             .addSrc(Paths.get("Source.java"))
             .build(resolver, filesystem);
     filesystem.writeContentsToPath(
         "changed ABI JAR contents",
         pathResolver.deprecatedGetPath(dep.getAbiJar().get()));
     library =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .addDep(dep.getBuildTarget())
             .build(resolver, filesystem);
     factory =
@@ -787,20 +787,20 @@ public class DefaultJavaLibraryTest {
     // library dep.
     BuildRuleResolver resolver = new BuildRuleResolver();
     SourcePathResolver pathResolver = new SourcePathResolver(resolver);
-    JavaLibrary exportedDep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:edep"))
+    JvmLibrary exportedDep =
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:edep"))
             .addSrc(Paths.get("Source1.java"))
             .build(resolver, filesystem);
     filesystem.writeContentsToPath("JAR contents", exportedDep.getPathToOutput());
     filesystem.writeContentsToPath(
         "ABI JAR contents",
         pathResolver.deprecatedGetPath(exportedDep.getAbiJar().get()));
-    JavaLibrary dep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
+    JvmLibrary dep =
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
             .addExportedDep(exportedDep.getBuildTarget())
             .build(resolver, filesystem);
-    JavaLibrary library =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+    JvmLibrary library =
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .addDep(dep.getBuildTarget())
             .build(resolver, filesystem);
     InputBasedRuleKeyBuilderFactory factory =
@@ -815,17 +815,17 @@ public class DefaultJavaLibraryTest {
     // JAR.
     resolver = new BuildRuleResolver();
     exportedDep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:edep"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:edep"))
             .addSrc(Paths.get("Source1.java"))
             .setResourcesRoot(Paths.get("some root that changes the rule key"))
             .build(resolver, filesystem);
     filesystem.writeContentsToPath("different JAR contents", exportedDep.getPathToOutput());
     dep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
             .addExportedDep(exportedDep.getBuildTarget())
             .build(resolver, filesystem);
     library =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .addDep(dep.getBuildTarget())
             .build(resolver, filesystem);
     factory =
@@ -840,18 +840,18 @@ public class DefaultJavaLibraryTest {
     resolver = new BuildRuleResolver();
     pathResolver = new SourcePathResolver(resolver);
     exportedDep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:edep"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:edep"))
             .addSrc(Paths.get("Source1.java"))
             .build(resolver, filesystem);
     filesystem.writeContentsToPath(
         "changed ABI JAR contents",
         pathResolver.deprecatedGetPath(exportedDep.getAbiJar().get()));
     dep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
             .addExportedDep(exportedDep.getBuildTarget())
             .build(resolver, filesystem);
     library =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .addDep(dep.getBuildTarget())
             .build(resolver, filesystem);
     factory =
@@ -874,24 +874,24 @@ public class DefaultJavaLibraryTest {
     // library dep.
     BuildRuleResolver resolver = new BuildRuleResolver();
     SourcePathResolver pathResolver = new SourcePathResolver(resolver);
-    JavaLibrary exportedDep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:edep"))
+    JvmLibrary exportedDep =
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:edep"))
             .addSrc(Paths.get("Source1.java"))
             .build(resolver, filesystem);
     filesystem.writeContentsToPath("JAR contents", exportedDep.getPathToOutput());
     filesystem.writeContentsToPath(
         "ABI JAR contents",
         pathResolver.deprecatedGetPath(exportedDep.getAbiJar().get()));
-    JavaLibrary dep2 =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep2"))
+    JvmLibrary dep2 =
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep2"))
             .addExportedDep(exportedDep.getBuildTarget())
             .build(resolver, filesystem);
-    JavaLibrary dep1 =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep1"))
+    JvmLibrary dep1 =
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep1"))
             .addExportedDep(dep2.getBuildTarget())
             .build(resolver, filesystem);
-    JavaLibrary library =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+    JvmLibrary library =
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .addDep(dep1.getBuildTarget())
             .build(resolver, filesystem);
     InputBasedRuleKeyBuilderFactory factory =
@@ -906,21 +906,21 @@ public class DefaultJavaLibraryTest {
     // JAR.
     resolver = new BuildRuleResolver();
     exportedDep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:edep"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:edep"))
             .addSrc(Paths.get("Source1.java"))
             .setResourcesRoot(Paths.get("some root that changes the rule key"))
             .build(resolver, filesystem);
     filesystem.writeContentsToPath("different JAR contents", exportedDep.getPathToOutput());
     dep2 =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep2"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep2"))
             .addExportedDep(exportedDep.getBuildTarget())
             .build(resolver, filesystem);
     dep1 =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep1"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep1"))
             .addExportedDep(dep2.getBuildTarget())
             .build(resolver, filesystem);
     library =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .addDep(dep1.getBuildTarget())
             .build(resolver, filesystem);
     factory =
@@ -935,22 +935,22 @@ public class DefaultJavaLibraryTest {
     resolver = new BuildRuleResolver();
     pathResolver = new SourcePathResolver(resolver);
     exportedDep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:edep"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:edep"))
             .addSrc(Paths.get("Source1.java"))
             .build(resolver, filesystem);
     filesystem.writeContentsToPath(
         "changed ABI JAR contents",
         pathResolver.deprecatedGetPath(exportedDep.getAbiJar().get()));
     dep2 =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep2"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep2"))
             .addExportedDep(exportedDep.getBuildTarget())
             .build(resolver, filesystem);
     dep1 =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep1"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep1"))
             .addExportedDep(dep2.getBuildTarget())
             .build(resolver, filesystem);
     library =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .addDep(dep1.getBuildTarget())
             .build(resolver, filesystem);
     factory =
@@ -1028,21 +1028,21 @@ public class DefaultJavaLibraryTest {
 
     BuildContext context = createSuggestContext(ruleResolver);
 
-    ImmutableSetMultimap<JavaLibrary, Path> transitive =
+    ImmutableSetMultimap<JvmLibrary, Path> transitive =
         ((HasClasspathEntries) parent).getTransitiveClasspathEntries();
 
     ImmutableMap<Path, String> classToSymbols = ImmutableMap.of(
-        Iterables.getFirst(transitive.get((JavaLibrary) parent), null),
+        Iterables.getFirst(transitive.get((JvmLibrary) parent), null),
         "com.facebook.Foo",
-        Iterables.getFirst(transitive.get((JavaLibrary) libraryOne), null),
+        Iterables.getFirst(transitive.get((JvmLibrary) libraryOne), null),
         "com.facebook.Bar",
-        Iterables.getFirst(transitive.get((JavaLibrary) libraryTwo), null),
+        Iterables.getFirst(transitive.get((JvmLibrary) libraryTwo), null),
         "com.facebook.Foo");
 
     Optional<JavacStep.SuggestBuildRules> suggestFn =
         ((DefaultJavaLibrary) grandparent).createSuggestBuildFunction(
             context,
-            /* declaredClasspathEntries */ ImmutableSetMultimap.<JavaLibrary, Path>of(),
+            /* declaredClasspathEntries */ ImmutableSetMultimap.<JvmLibrary, Path>of(),
             createJarResolver(classToSymbols));
 
     assertTrue(suggestFn.isPresent());
@@ -1208,8 +1208,8 @@ public class DefaultJavaLibraryTest {
   }
 
   // Utilities
-  private JavaLibrary getJavaLibrary(BuildRule rule) {
-    return (JavaLibrary) rule;
+  private JvmLibrary getJavaLibrary(BuildRule rule) {
+    return (JvmLibrary) rule;
   }
 
   private DefaultJavaLibrary.JarResolver createJarResolver(

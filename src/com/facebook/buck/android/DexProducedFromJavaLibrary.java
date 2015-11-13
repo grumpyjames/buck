@@ -18,7 +18,7 @@ package com.facebook.buck.android;
 
 import com.facebook.buck.android.DexProducedFromJavaLibrary.BuildOutput;
 import com.facebook.buck.dalvik.EstimateLinearAllocStep;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.model.HasBuildTarget;
 import com.facebook.buck.rules.keys.AbiRule;
@@ -62,8 +62,8 @@ import javax.annotation.Nullable;
 
 /**
  * {@link DexProducedFromJavaLibrary} is a {@link BuildRule} that serves a
- * very specific purpose: it takes a {@link JavaLibrary} and dexes the output of the
- * {@link JavaLibrary} if its list of classes is non-empty. Because it is expected to be used with
+ * very specific purpose: it takes a {@link JvmLibrary} and dexes the output of the
+ * {@link JvmLibrary} if its list of classes is non-empty. Because it is expected to be used with
  * pre-dexing, we always pass the {@code --force-jumbo} flag to {@code dx} in this buildable.
  * <p>
  * Most {@link BuildRule}s can determine the (possibly null) path to their output file from their
@@ -87,16 +87,16 @@ public class DexProducedFromJavaLibrary extends AbstractBuildRule
   static final String LINEAR_ALLOC_KEY_ON_DISK_METADATA = "linearalloc";
   static final String CLASSNAMES_TO_HASHES = "classnames_to_hashes";
 
-  private final JavaLibrary javaLibrary;
+  private final JvmLibrary jvmLibrary;
   private final BuildOutputInitializer<BuildOutput> buildOutputInitializer;
 
   @VisibleForTesting
   DexProducedFromJavaLibrary(
       BuildRuleParams params,
       SourcePathResolver resolver,
-      JavaLibrary javaLibrary) {
+      JvmLibrary jvmLibrary) {
     super(params, resolver);
-    this.javaLibrary = javaLibrary;
+    this.jvmLibrary = jvmLibrary;
     this.buildOutputInitializer = new BuildOutputInitializer<>(params.getBuildTarget(), this);
   }
 
@@ -113,11 +113,11 @@ public class DexProducedFromJavaLibrary extends AbstractBuildRule
 
     // If there are classes, run dx.
     final ImmutableSortedMap<String, HashCode> classNamesToHashes =
-        javaLibrary.getClassNamesToHashes();
+        jvmLibrary.getClassNamesToHashes();
     final boolean hasClassesToDx = !classNamesToHashes.isEmpty();
     final Supplier<Integer> linearAllocEstimate;
     if (hasClassesToDx) {
-      Path pathToOutputFile = javaLibrary.getPathToOutput();
+      Path pathToOutputFile = jvmLibrary.getPathToOutput();
       EstimateLinearAllocStep estimate = new EstimateLinearAllocStep(
           getProjectFilesystem(),
           pathToOutputFile);
@@ -227,12 +227,12 @@ public class DexProducedFromJavaLibrary extends AbstractBuildRule
   }
 
   /**
-   * The only dep for this rule should be {@link #javaLibrary}. Therefore, the ABI key for the deps
-   * of this buildable is the hash of the {@code .class} files for {@link #javaLibrary}.
+   * The only dep for this rule should be {@link #jvmLibrary}. Therefore, the ABI key for the deps
+   * of this buildable is the hash of the {@code .class} files for {@link #jvmLibrary}.
    */
   @Override
   public Sha1HashCode getAbiKeyForDeps() {
-    return computeAbiKey(javaLibrary.getClassNamesToHashes());
+    return computeAbiKey(jvmLibrary.getClassNamesToHashes());
   }
 
   @VisibleForTesting

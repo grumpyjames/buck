@@ -18,7 +18,7 @@ package com.facebook.buck.rules.macros;
 
 import com.facebook.buck.io.ProjectFilesystem;
 import com.facebook.buck.jvm.core.HasClasspathEntries;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.rules.BuildRule;
 import com.facebook.buck.rules.BuildRuleResolver;
@@ -95,10 +95,10 @@ public class ClasspathMacroExpander
     return Joiner.on(File.pathSeparator).join(
         FluentIterable.from(getHasClasspathEntries(rule).getTransitiveClasspathDeps())
             .transform(
-                new Function<JavaLibrary, Path>() {
+                new Function<JvmLibrary, Path>() {
                   @Nullable
                   @Override
-                  public Path apply(JavaLibrary input) {
+                  public Path apply(JvmLibrary input) {
                     return input.getPathToOutput();
                   }
                 })
@@ -119,9 +119,9 @@ public class ClasspathMacroExpander
             getHasClasspathEntries(resolve(target, cellNames, resolver, input))
                 .getTransitiveClasspathDeps())
         .filter(
-            new Predicate<JavaLibrary>() {
+            new Predicate<JvmLibrary>() {
               @Override
-              public boolean apply(JavaLibrary input) {
+              public boolean apply(JvmLibrary input) {
                 return input.getPathToOutput() != null;
               }
             })

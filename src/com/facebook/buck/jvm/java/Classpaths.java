@@ -16,7 +16,7 @@
 
 package com.facebook.buck.jvm.java;
 
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.rules.BuildRule;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
@@ -45,14 +45,14 @@ public class Classpaths {
    * that depend on B. However, if C depended on E as well as F and G, then E would be included in
    * A's classpath.
    */
-  public static ImmutableSetMultimap<JavaLibrary, Path> getClasspathEntries(
+  public static ImmutableSetMultimap<JvmLibrary, Path> getClasspathEntries(
       Set<BuildRule> deps) {
-    final ImmutableSetMultimap.Builder<JavaLibrary, Path> classpathEntries =
+    final ImmutableSetMultimap.Builder<JvmLibrary, Path> classpathEntries =
         ImmutableSetMultimap.builder();
     for (BuildRule dep : deps) {
-      JavaLibrary library = null;
-      if (dep instanceof JavaLibrary) {
-        library = (JavaLibrary) dep;
+      JvmLibrary library = null;
+      if (dep instanceof JvmLibrary) {
+        library = (JvmLibrary) dep;
       }
 
       if (library != null) {
@@ -62,11 +62,11 @@ public class Classpaths {
     return classpathEntries.build();
   }
 
-  public static ImmutableSet<JavaLibrary> getClasspathDeps(Iterable<BuildRule> deps) {
-    ImmutableSet.Builder<JavaLibrary> classpathDeps = ImmutableSet.builder();
+  public static ImmutableSet<JvmLibrary> getClasspathDeps(Iterable<BuildRule> deps) {
+    ImmutableSet.Builder<JvmLibrary> classpathDeps = ImmutableSet.builder();
     for (BuildRule dep : deps) {
-      if (dep instanceof JavaLibrary) {
-        classpathDeps.addAll(((JavaLibrary) dep).getTransitiveClasspathDeps());
+      if (dep instanceof JvmLibrary) {
+        classpathDeps.addAll(((JvmLibrary) dep).getTransitiveClasspathDeps());
       }
     }
     return classpathDeps.build();

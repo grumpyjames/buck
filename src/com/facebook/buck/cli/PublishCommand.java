@@ -17,7 +17,7 @@
 package com.facebook.buck.cli;
 
 import com.facebook.buck.event.ConsoleEvent;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.core.MavenPublishable;
 import com.facebook.buck.maven.Publisher;
 import com.facebook.buck.model.BuildTarget;
@@ -173,7 +173,7 @@ public class PublishCommand extends BuildCommand {
                       return !((BuildTargetSpec) input)
                           .getBuildTarget()
                           .getFlavors()
-                          .contains(JavaLibrary.SRC_JAR);
+                          .contains(JvmLibrary.SRC_JAR);
                     }
                   })
               .transform(
@@ -183,7 +183,7 @@ public class PublishCommand extends BuildCommand {
                       return BuildTargetSpec.of(
                           ((BuildTargetSpec) input)
                               .getBuildTarget()
-                              .withFlavors(JavaLibrary.SRC_JAR),
+                              .withFlavors(JvmLibrary.SRC_JAR),
                           input.getBuildFileSpec());
                     }
                   }))
@@ -209,7 +209,7 @@ public class PublishCommand extends BuildCommand {
                 return buildTargetSpec.withBuildTarget(
                     BuildTarget
                         .builder(buildTarget)
-                        .addFlavors(JavaLibrary.MAVEN_JAR)
+                        .addFlavors(JvmLibrary.MAVEN_JAR)
                         .build());
               }
             })

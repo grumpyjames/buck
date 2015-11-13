@@ -16,7 +16,7 @@
 
 package com.facebook.buck.jvm.java;
 
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.rules.BuildRule;
 import com.facebook.buck.rules.RuleKeyBuilder;
 import com.facebook.buck.rules.SourcePath;
@@ -93,8 +93,8 @@ public class JarBackedJavac extends Jsr199Javac {
                   public Collection<Path> apply(SourcePath input) {
                     Set<Path> paths = new HashSet<>();
                     Optional<BuildRule> rule = resolver.getRule(input);
-                    if (rule instanceof JavaLibrary) {
-                      paths.addAll(((JavaLibrary) rule).getTransitiveClasspathEntries().values());
+                    if (rule instanceof JvmLibrary) {
+                      paths.addAll(((JvmLibrary) rule).getTransitiveClasspathEntries().values());
                     } else {
                       paths.add(resolver.deprecatedGetPath(input));
                     }

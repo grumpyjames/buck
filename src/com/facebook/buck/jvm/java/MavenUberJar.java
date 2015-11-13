@@ -18,7 +18,7 @@ package com.facebook.buck.jvm.java;
 
 import com.facebook.buck.jvm.core.HasMavenCoordinates;
 import com.facebook.buck.jvm.core.HasSources;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.core.MavenPublishable;
 import com.facebook.buck.rules.AbstractBuildRule;
 import com.facebook.buck.rules.BuildContext;
@@ -46,7 +46,7 @@ import java.nio.file.Path;
 import javax.annotation.Nullable;
 
 /**
- * A {@link BuildRule} used to have the provided {@link JavaLibrary} published to a maven repository
+ * A {@link BuildRule} used to have the provided {@link JvmLibrary} published to a maven repository
  *
  * @see #create
  */
@@ -79,7 +79,7 @@ public class MavenUberJar extends AbstractBuildRule implements MavenPublishable 
    * published item.
    */
   public static MavenUberJar create(
-      JavaLibrary rootRule,
+      JvmLibrary rootRule,
       BuildRuleParams params,
       SourcePathResolver resolver,
       Optional<String> mavenCoords) {

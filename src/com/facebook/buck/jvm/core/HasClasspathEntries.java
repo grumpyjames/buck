@@ -29,11 +29,11 @@ public interface HasClasspathEntries {
   /**
    * @return A map of rule names to classpath entries for this rule and its dependencies.
    */
-  ImmutableSetMultimap<JavaLibrary, Path> getTransitiveClasspathEntries();
+  ImmutableSetMultimap<JvmLibrary, Path> getTransitiveClasspathEntries();
 
   /**
    * @return A set of rules contributing classpath entries for this rule and its dependencies.
    */
-  ImmutableSet<JavaLibrary> getTransitiveClasspathDeps();
+  ImmutableSet<JvmLibrary> getTransitiveClasspathDeps();
 
 }

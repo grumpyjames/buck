@@ -21,8 +21,8 @@ import com.facebook.buck.android.AndroidLibraryGraphEnhancer;
 import com.facebook.buck.android.AndroidResourceDescription;
 import com.facebook.buck.android.DummyRDotJava;
 import com.facebook.buck.io.ProjectFilesystem;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.JavaFileParser;
-import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.rules.BuildRule;
@@ -91,7 +91,7 @@ public class IjProject {
           @Override
           public Optional<Path> getPathIfJavaLibrary(TargetNode<?> targetNode) {
             BuildRule rule = buildRuleResolver.getRule(targetNode.getBuildTarget());
-            if (!(rule instanceof JavaLibrary)) {
+            if (!(rule instanceof JvmLibrary)) {
               return Optional.absent();
             }
             requiredBuildTargets.add(rule.getBuildTarget());

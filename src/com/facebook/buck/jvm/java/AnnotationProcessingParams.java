@@ -17,7 +17,7 @@ package com.facebook.buck.jvm.java;
 
 import com.facebook.buck.io.ProjectFilesystem;
 import com.facebook.buck.jvm.core.HasClasspathEntries;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.rules.BuildRule;
 import com.facebook.buck.rules.BuildTargetSourcePath;
@@ -207,9 +207,9 @@ public class AnnotationProcessingParams implements RuleKeyAppendable {
           }
         } else if (rule instanceof HasClasspathEntries) {
           HasClasspathEntries hasClasspathEntries = (HasClasspathEntries) rule;
-          ImmutableSetMultimap<JavaLibrary, Path> entries =
+          ImmutableSetMultimap<JvmLibrary, Path> entries =
               hasClasspathEntries.getTransitiveClasspathEntries();
-          for (Map.Entry<JavaLibrary, Path> entry : entries.entries()) {
+          for (Map.Entry<JvmLibrary, Path> entry : entries.entries()) {
             inputs.add(
                 new BuildTargetSourcePath(
                     entry.getKey().getBuildTarget(),

@@ -35,7 +35,7 @@ import com.facebook.buck.io.MorePaths;
 import com.facebook.buck.io.ProjectFilesystem;
 import com.facebook.buck.json.BuildFileParseException;
 import com.facebook.buck.json.ParseBuckFileEvent;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargetException;
 import com.facebook.buck.model.BuildTargetFactory;
@@ -290,7 +290,7 @@ public class ParserNgTest {
   public void shouldThrowAnExceptionWhenAFlavorIsAskedOfATargetThatDoesntSupportFlavors()
       throws BuildFileParseException, BuildTargetException, InterruptedException, IOException {
     BuildTarget flavored = BuildTarget.builder(cellRoot, "//java/com/facebook", "baz")
-        .addFlavors(JavaLibrary.SRC_JAR)
+        .addFlavors(JvmLibrary.SRC_JAR)
         .build();
 
     thrown.expect(HumanReadableException.class);
@@ -1459,7 +1459,7 @@ public class ParserNgTest {
           buildTargets);
       ActionGraph graph = buildActionGraph(eventBus, targetGraph);
 
-      JavaLibrary libRule = (JavaLibrary) graph.findBuildRuleByTarget(libTarget);
+      JvmLibrary libRule = (JvmLibrary) graph.findBuildRuleByTarget(libTarget);
       assertEquals(ImmutableSet.of(Paths.get("foo/bar/Bar.java")), libRule.getJavaSrcs());
     }
 
@@ -1477,7 +1477,7 @@ public class ParserNgTest {
           buildTargets);
       ActionGraph graph = buildActionGraph(eventBus, targetGraph);
 
-      JavaLibrary libRule = (JavaLibrary) graph.findBuildRuleByTarget(libTarget);
+      JvmLibrary libRule = (JvmLibrary) graph.findBuildRuleByTarget(libTarget);
       assertEquals(
           ImmutableSet.of(Paths.get("foo/bar/Bar.java"), Paths.get("foo/bar/Baz.java")),
           libRule.getJavaSrcs());
@@ -1514,7 +1514,7 @@ public class ParserNgTest {
           buildTargets);
       ActionGraph graph = buildActionGraph(eventBus, targetGraph);
 
-      JavaLibrary libRule = (JavaLibrary) graph.findBuildRuleByTarget(libTarget);
+      JvmLibrary libRule = (JvmLibrary) graph.findBuildRuleByTarget(libTarget);
 
       assertEquals(
           ImmutableSortedSet.of(Paths.get("foo/bar/Bar.java"), Paths.get("foo/bar/Baz.java")),
@@ -1535,7 +1535,7 @@ public class ParserNgTest {
           buildTargets);
       ActionGraph graph = buildActionGraph(eventBus, targetGraph);
 
-      JavaLibrary libRule = (JavaLibrary) graph.findBuildRuleByTarget(libTarget);
+      JvmLibrary libRule = (JvmLibrary) graph.findBuildRuleByTarget(libTarget);
       assertEquals(
           ImmutableSet.of(Paths.get("foo/bar/Bar.java")),
           libRule.getJavaSrcs());

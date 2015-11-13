@@ -26,8 +26,8 @@ import static org.junit.Assert.assertThat;
 
 import com.facebook.buck.dalvik.EstimateLinearAllocStep;
 import com.facebook.buck.io.ProjectFilesystem;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.FakeJavaLibrary;
-import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.jvm.java.JavaLibraryBuilder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargetFactory;
@@ -157,8 +157,8 @@ public class DexProducedFromJavaLibraryThatContainsClassFilesTest extends EasyMo
   @Test
   public void testGetBuildStepsWhenThereAreNoClassesToDex()
       throws IOException, InterruptedException {
-    JavaLibrary javaLibrary = createMock(JavaLibrary.class);
-    expect(javaLibrary.getClassNamesToHashes()).andReturn(
+    JvmLibrary jvmLibrary = createMock(JvmLibrary.class);
+    expect(jvmLibrary.getClassNamesToHashes()).andReturn(
         ImmutableSortedMap.<String, HashCode>of());
 
     BuildContext context = createMock(BuildContext.class);
@@ -175,7 +175,7 @@ public class DexProducedFromJavaLibraryThatContainsClassFilesTest extends EasyMo
         new DexProducedFromJavaLibrary(
             params,
             new SourcePathResolver(new BuildRuleResolver()),
-            javaLibrary);
+            jvmLibrary);
     List<Step> steps = preDex.getBuildSteps(context, buildableContext);
 
     verifyAll();
@@ -214,7 +214,7 @@ public class DexProducedFromJavaLibraryThatContainsClassFilesTest extends EasyMo
 
   @Test
   public void testObserverMethods() {
-    JavaLibrary accumulateClassNames = createMock(JavaLibrary.class);
+    JvmLibrary accumulateClassNames = createMock(JvmLibrary.class);
     expect(accumulateClassNames.getClassNamesToHashes())
         .andReturn(ImmutableSortedMap.of("com/example/Foo", HashCode.fromString("cafebabe")))
         .anyTimes();
@@ -248,15 +248,15 @@ public class DexProducedFromJavaLibraryThatContainsClassFilesTest extends EasyMo
     BuildRuleResolver ruleResolver = new BuildRuleResolver();
     SourcePathResolver pathResolver = new SourcePathResolver(ruleResolver);
 
-    JavaLibrary javaLibrary =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
+    JvmLibrary jvmLibrary =
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:lib"))
             .build(ruleResolver);
 
     BuildRuleParams params =
         new FakeBuildRuleParamsBuilder(BuildTargetFactory.newInstance("//:target"))
             .build();
     DexProducedFromJavaLibrary dexProducedFromJavaLibrary =
-        new DexProducedFromJavaLibrary(params, pathResolver, javaLibrary);
+        new DexProducedFromJavaLibrary(params, pathResolver, jvmLibrary);
 
     ObjectMapper mapper = new ObjectMapper();
     FakeOnDiskBuildInfo onDiskBuildInfo =

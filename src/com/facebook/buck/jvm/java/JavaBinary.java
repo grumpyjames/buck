@@ -20,7 +20,7 @@ import static com.facebook.buck.rules.BuildableProperties.Kind.PACKAGING;
 
 import com.facebook.buck.io.DirectoryTraverser;
 import com.facebook.buck.jvm.core.HasClasspathEntries;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.rules.AbstractBuildRule;
 import com.facebook.buck.rules.AddToRuleKey;
@@ -73,7 +73,7 @@ public class JavaBinary extends AbstractBuildRule
   private final ImmutableSet<String> blacklist;
 
   private final DirectoryTraverser directoryTraverser;
-  private final ImmutableSetMultimap<JavaLibrary, Path> transitiveClasspathEntries;
+  private final ImmutableSetMultimap<JvmLibrary, Path> transitiveClasspathEntries;
 
   public JavaBinary(
       BuildRuleParams params,
@@ -84,7 +84,7 @@ public class JavaBinary extends AbstractBuildRule
       @Nullable Path metaInfDirectory,
       ImmutableSet<String> blacklist,
       DirectoryTraverser directoryTraverser,
-      ImmutableSetMultimap<JavaLibrary, Path> transitiveClasspathEntries) {
+      ImmutableSetMultimap<JvmLibrary, Path> transitiveClasspathEntries) {
     super(params, resolver);
     this.mainClass = mainClass;
     this.manifestFile = manifestFile;
@@ -161,12 +161,12 @@ public class JavaBinary extends AbstractBuildRule
   }
 
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getTransitiveClasspathEntries() {
+  public ImmutableSetMultimap<JvmLibrary, Path> getTransitiveClasspathEntries() {
     return transitiveClasspathEntries;
   }
 
   @Override
-  public ImmutableSet<JavaLibrary> getTransitiveClasspathDeps() {
+  public ImmutableSet<JvmLibrary> getTransitiveClasspathDeps() {
     return transitiveClasspathEntries.keySet();
   }
 

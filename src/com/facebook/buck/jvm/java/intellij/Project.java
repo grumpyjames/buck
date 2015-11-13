@@ -34,9 +34,9 @@ import com.facebook.buck.android.NdkLibrary;
 import com.facebook.buck.cxx.CxxLibrary;
 import com.facebook.buck.graph.AbstractBreadthFirstTraversal;
 import com.facebook.buck.io.ProjectFilesystem;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.AnnotationProcessingParams;
 import com.facebook.buck.jvm.java.JavaBinary;
-import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.jvm.java.PrebuiltJar;
 import com.facebook.buck.log.Logger;
@@ -329,7 +329,7 @@ public class Project {
             projectRule instanceof AndroidLibrary ||
             projectRule instanceof AndroidResource ||
             projectRule instanceof JavaBinary ||
-            projectRule instanceof JavaLibrary ||
+            projectRule instanceof JvmLibrary ||
             projectRule instanceof CxxLibrary ||
             projectRule instanceof NdkLibrary,
         "project_config() does not know how to process a src_target of type %s.",
@@ -478,12 +478,12 @@ public class Project {
 
     // Annotation processing generates sources for IntelliJ to consume, but does so outside
     // the module directory to avoid messing up globbing.
-    JavaLibrary javaLibrary = null;
-    if (projectRule instanceof JavaLibrary) {
-      javaLibrary = (JavaLibrary) projectRule;
+    JvmLibrary jvmLibrary = null;
+    if (projectRule instanceof JvmLibrary) {
+      jvmLibrary = (JvmLibrary) projectRule;
     }
-    if (javaLibrary != null) {
-      AnnotationProcessingParams processingParams = javaLibrary.getAnnotationProcessingParams();
+    if (jvmLibrary != null) {
+      AnnotationProcessingParams processingParams = jvmLibrary.getAnnotationProcessingParams();
 
       Path annotationGenSrc = processingParams.getGeneratedSourceFolderName();
       if (annotationGenSrc != null) {
@@ -868,7 +868,7 @@ public class Project {
         } else if (
             (dep instanceof CxxLibrary) ||
             (dep instanceof NdkLibrary) ||
-            (dep instanceof JavaLibrary) ||
+            (dep instanceof JvmLibrary) ||
             (dep instanceof AndroidResource)) {
           String moduleName = getIntellijNameForRule(dep);
           dependentModule = SerializableDependentModule.newModule(dep.getBuildTarget(), moduleName);

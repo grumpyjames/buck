@@ -18,7 +18,7 @@ package com.facebook.buck.jvm.java;
 
 import com.facebook.buck.cxx.CxxPlatform;
 import com.facebook.buck.io.DefaultDirectoryTraverser;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.Flavor;
 import com.facebook.buck.model.ImmutableFlavor;
@@ -91,7 +91,7 @@ public class JavaBinaryDescription implements Description<JavaBinaryDescription.
     }
 
     // Construct the build rule to build the binary JAR.
-    ImmutableSetMultimap<JavaLibrary, Path> transitiveClasspathEntries =
+    ImmutableSetMultimap<JvmLibrary, Path> transitiveClasspathEntries =
         Classpaths.getClasspathEntries(binaryParams.getDeps());
     BuildRule rule = new JavaBinary(
         binaryParams.appendExtraDeps(transitiveClasspathEntries.keys()),

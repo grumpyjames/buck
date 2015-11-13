@@ -16,7 +16,7 @@
 
 package com.facebook.buck.android;
 
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.rules.BuildRuleParams;
 import com.facebook.buck.rules.SourcePath;
 import com.facebook.buck.rules.SourcePathResolver;
@@ -51,7 +51,7 @@ public class AndroidInstrumentationApk extends AndroidBinary {
       Optional<Path> proGuardJarOverride,
       String proGuardMaxHeapSize,
       AndroidBinary apkUnderTest,
-      ImmutableSortedSet<JavaLibrary> rulesToExcludeFromDex,
+      ImmutableSortedSet<JvmLibrary> rulesToExcludeFromDex,
       AndroidGraphEnhancementResult enhancementResult,
       ListeningExecutorService dxExecutorService) {
     super(

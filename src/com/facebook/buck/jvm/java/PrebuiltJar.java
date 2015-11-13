@@ -21,7 +21,7 @@ import static com.facebook.buck.rules.BuildableProperties.Kind.LIBRARY;
 import com.facebook.buck.android.AndroidPackageable;
 import com.facebook.buck.android.AndroidPackageableCollector;
 import com.facebook.buck.jvm.core.HasClasspathEntries;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.rules.AbstractBuildRule;
 import com.facebook.buck.rules.AddToRuleKey;
@@ -57,7 +57,7 @@ import java.nio.file.Path;
 @BuildsAnnotationProcessor
 public class PrebuiltJar extends AbstractBuildRule
     implements AndroidPackageable, ExportDependencies, HasClasspathEntries,
-    InitializableFromDisk<JavaLibrary.Data>, JavaLibrary {
+    InitializableFromDisk<JvmLibrary.Data>, JvmLibrary {
 
   private static final BuildableProperties OUTPUT_TYPE = new BuildableProperties(LIBRARY);
 
@@ -75,11 +75,11 @@ public class PrebuiltJar extends AbstractBuildRule
   @AddToRuleKey
   private final Optional<String> mavenCoords;
   private final Path internalAbiJar;
-  private final Supplier<ImmutableSetMultimap<JavaLibrary, Path>>
+  private final Supplier<ImmutableSetMultimap<JvmLibrary, Path>>
       transitiveClasspathEntriesSupplier;
-  private final Supplier<ImmutableSet<JavaLibrary>> transitiveClasspathDepsSupplier;
+  private final Supplier<ImmutableSet<JvmLibrary>> transitiveClasspathDepsSupplier;
 
-  private final Supplier<ImmutableSetMultimap<JavaLibrary, Path>>
+  private final Supplier<ImmutableSetMultimap<JvmLibrary, Path>>
       declaredClasspathEntriesSupplier;
 
   private final BuildOutputInitializer<Data> buildOutputInitializer;
@@ -104,10 +104,10 @@ public class PrebuiltJar extends AbstractBuildRule
     this.internalAbiJar = BuildTargets.getGenPath(getBuildTarget(), "%s-abi.jar");
 
     transitiveClasspathEntriesSupplier =
-        Suppliers.memoize(new Supplier<ImmutableSetMultimap<JavaLibrary, Path>>() {
+        Suppliers.memoize(new Supplier<ImmutableSetMultimap<JvmLibrary, Path>>() {
           @Override
-          public ImmutableSetMultimap<JavaLibrary, Path> get() {
-            ImmutableSetMultimap.Builder<JavaLibrary, Path> classpathEntries =
+          public ImmutableSetMultimap<JvmLibrary, Path> get() {
+            ImmutableSetMultimap.Builder<JvmLibrary, Path> classpathEntries =
                 ImmutableSetMultimap.builder();
             classpathEntries.put(PrebuiltJar.this, getResolver().deprecatedGetPath(getBinaryJar()));
             classpathEntries.putAll(Classpaths.getClasspathEntries(
@@ -118,10 +118,10 @@ public class PrebuiltJar extends AbstractBuildRule
 
     this.transitiveClasspathDepsSupplier =
         Suppliers.memoize(
-            new Supplier<ImmutableSet<JavaLibrary>>() {
+            new Supplier<ImmutableSet<JvmLibrary>>() {
               @Override
-              public ImmutableSet<JavaLibrary> get() {
-                return ImmutableSet.<JavaLibrary>builder()
+              public ImmutableSet<JvmLibrary> get() {
+                return ImmutableSet.<JvmLibrary>builder()
                     .add(PrebuiltJar.this)
                     .addAll(Classpaths.getClasspathDeps(PrebuiltJar.this.getDeclaredDeps()))
                     .build();
@@ -129,10 +129,10 @@ public class PrebuiltJar extends AbstractBuildRule
             });
 
     declaredClasspathEntriesSupplier =
-        Suppliers.memoize(new Supplier<ImmutableSetMultimap<JavaLibrary, Path>>() {
+        Suppliers.memoize(new Supplier<ImmutableSetMultimap<JvmLibrary, Path>>() {
           @Override
-          public ImmutableSetMultimap<JavaLibrary, Path> get() {
-            ImmutableSetMultimap.Builder<JavaLibrary, Path> classpathEntries =
+          public ImmutableSetMultimap<JvmLibrary, Path> get() {
+            ImmutableSetMultimap.Builder<JvmLibrary, Path> classpathEntries =
                 ImmutableSetMultimap.builder();
             classpathEntries.put(PrebuiltJar.this, getResolver().deprecatedGetPath(getBinaryJar()));
             return classpathEntries.build();
@@ -169,7 +169,7 @@ public class PrebuiltJar extends AbstractBuildRule
   }
 
   @Override
-  public JavaLibrary.Data initializeFromDisk(OnDiskBuildInfo onDiskBuildInfo) throws IOException {
+  public JvmLibrary.Data initializeFromDisk(OnDiskBuildInfo onDiskBuildInfo) throws IOException {
     return JavaLibraryRules.initializeFromDisk(getBuildTarget(), onDiskBuildInfo);
   }
 
@@ -184,23 +184,23 @@ public class PrebuiltJar extends AbstractBuildRule
   }
 
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getTransitiveClasspathEntries() {
+  public ImmutableSetMultimap<JvmLibrary, Path> getTransitiveClasspathEntries() {
     return transitiveClasspathEntriesSupplier.get();
   }
 
   @Override
-  public ImmutableSet<JavaLibrary> getTransitiveClasspathDeps() {
+  public ImmutableSet<JvmLibrary> getTransitiveClasspathDeps() {
     return transitiveClasspathDepsSupplier.get();
   }
 
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getDeclaredClasspathEntries() {
+  public ImmutableSetMultimap<JvmLibrary, Path> getDeclaredClasspathEntries() {
     return declaredClasspathEntriesSupplier.get();
   }
 
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getOutputClasspathEntries() {
-    return ImmutableSetMultimap.<JavaLibrary, Path>of(this, getResolver().deprecatedGetPath(
+  public ImmutableSetMultimap<JvmLibrary, Path> getOutputClasspathEntries() {
+    return ImmutableSetMultimap.<JvmLibrary, Path>of(this, getResolver().deprecatedGetPath(
             getBinaryJar()));
   }
 

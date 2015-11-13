@@ -21,7 +21,7 @@ import com.facebook.buck.android.AndroidBinary.PackageType;
 import com.facebook.buck.android.FilterResourcesStep.ResourceFilter;
 import com.facebook.buck.android.NdkCxxPlatforms.TargetCpuType;
 import com.facebook.buck.android.ResourcesFilter.ResourceCompressionMode;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.JavacOptions;
 import com.facebook.buck.jvm.java.Keystore;
 import com.facebook.buck.model.BuildTarget;
@@ -404,7 +404,7 @@ public class AndroidBinaryGraphEnhancer {
           buildRuleParams.getProjectFilesystem(),
           buildRuleParams.getCellRoots(),
           buildRuleParams.getRuleKeyBuilderFactory());
-      JavaLibrary buildConfigJavaLibrary = AndroidBuildConfigDescription.createBuildRule(
+      JvmLibrary buildConfigJvmLibrary = AndroidBuildConfigDescription.createBuildRule(
           buildConfigParams,
           javaPackage,
           totalBuildConfigValues,
@@ -412,24 +412,24 @@ public class AndroidBinaryGraphEnhancer {
           /* useConstantExpressions */ true,
           javacOptions,
           ruleResolver);
-      ruleResolver.addToIndex(buildConfigJavaLibrary);
+      ruleResolver.addToIndex(buildConfigJvmLibrary);
 
-      enhancedDeps.add(buildConfigJavaLibrary);
-      Path buildConfigJar = buildConfigJavaLibrary.getPathToOutput();
+      enhancedDeps.add(buildConfigJvmLibrary);
+      Path buildConfigJar = buildConfigJvmLibrary.getPathToOutput();
       Preconditions.checkNotNull(
           buildConfigJar,
           "%s must have an output file.",
-          buildConfigJavaLibrary);
+          buildConfigJvmLibrary);
       buildConfigJarFilesBuilder.add(buildConfigJar);
 
       if (shouldPreDex) {
         DexProducedFromJavaLibrary buildConfigDex = new DexProducedFromJavaLibrary(
             buildConfigParams.copyWithChanges(
                 createBuildTargetWithFlavor(ImmutableFlavor.of("dex_" + flavor.getName())),
-                Suppliers.ofInstance(ImmutableSortedSet.<BuildRule>of(buildConfigJavaLibrary)),
+                Suppliers.ofInstance(ImmutableSortedSet.<BuildRule>of(buildConfigJvmLibrary)),
                 /* extraDeps */ Suppliers.ofInstance(ImmutableSortedSet.<BuildRule>of())),
             pathResolver,
-            buildConfigJavaLibrary);
+            buildConfigJvmLibrary);
         ruleResolver.addToIndex(buildConfigDex);
         enhancedDeps.add(buildConfigDex);
         preDexRules.add(buildConfigDex);
@@ -448,14 +448,14 @@ public class AndroidBinaryGraphEnhancer {
       AaptPackageResources aaptPackageResources,
       Iterable<DexProducedFromJavaLibrary> preDexRulesNotInThePackageableCollection,
       AndroidPackageableCollection packageableCollection) {
-    ImmutableSortedSet.Builder<JavaLibrary> javaLibraryDepsBuilder =
+    ImmutableSortedSet.Builder<JvmLibrary> javaLibraryDepsBuilder =
         ImmutableSortedSet.naturalOrder();
     ImmutableSet.Builder<DexProducedFromJavaLibrary> preDexDeps = ImmutableSet.builder();
     preDexDeps.addAll(preDexRulesNotInThePackageableCollection);
     for (BuildTarget buildTarget : packageableCollection.getJavaLibrariesToDex()) {
       Preconditions.checkState(
           !buildTargetsToExcludeFromDex.contains(buildTarget),
-          "JavaLibrary should have been excluded from target to dex: %s", buildTarget);
+          "JvmLibrary should have been excluded from target to dex: %s", buildTarget);
 
       BuildRule libraryRule = ruleResolver.getRule(buildTarget);
 
@@ -464,21 +464,21 @@ public class AndroidBinaryGraphEnhancer {
         continue;
       }
 
-      Preconditions.checkState(libraryRule instanceof JavaLibrary);
-      JavaLibrary javaLibrary = (JavaLibrary) libraryRule;
+      Preconditions.checkState(libraryRule instanceof JvmLibrary);
+      JvmLibrary jvmLibrary = (JvmLibrary) libraryRule;
 
       // If the rule has no output file (which happens when a java_library has no srcs or
       // resources, but export_deps is true), then there will not be anything to dx.
-      if (javaLibrary.getPathToOutput() == null) {
+      if (jvmLibrary.getPathToOutput() == null) {
         continue;
       }
 
       // Take note of the rule so we add it to the enhanced deps.
-      javaLibraryDepsBuilder.add(javaLibrary);
+      javaLibraryDepsBuilder.add(jvmLibrary);
 
       // See whether the corresponding IntermediateDexRule has already been added to the
       // ruleResolver.
-      BuildTarget originalTarget = javaLibrary.getBuildTarget();
+      BuildTarget originalTarget = jvmLibrary.getBuildTarget();
       BuildTarget preDexTarget = BuildTarget.builder(originalTarget)
           .addFlavors(DEX_FLAVOR)
           .build();
@@ -492,10 +492,10 @@ public class AndroidBinaryGraphEnhancer {
       BuildRuleParams paramsForPreDex = buildRuleParams.copyWithChanges(
           preDexTarget,
           Suppliers.ofInstance(
-              ImmutableSortedSet.of(ruleResolver.getRule(javaLibrary.getBuildTarget()))),
+              ImmutableSortedSet.of(ruleResolver.getRule(jvmLibrary.getBuildTarget()))),
           /* extraDeps */ Suppliers.ofInstance(ImmutableSortedSet.<BuildRule>of()));
       DexProducedFromJavaLibrary preDex =
-          new DexProducedFromJavaLibrary(paramsForPreDex, pathResolver, javaLibrary);
+          new DexProducedFromJavaLibrary(paramsForPreDex, pathResolver, jvmLibrary);
       ruleResolver.addToIndex(preDex);
       preDexDeps.add(preDex);
     }

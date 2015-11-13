@@ -19,8 +19,8 @@ package com.facebook.buck.android;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.FakeJavaLibrary;
-import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargetFactory;
 import com.facebook.buck.rules.BuildRuleParams;
@@ -41,12 +41,12 @@ public class DexWithClassesTest {
   public void testIntermediateDexRuleToDexWithClasses() {
     SourcePathResolver resolver = new SourcePathResolver(new BuildRuleResolver());
     BuildTarget javaLibraryTarget = BuildTargetFactory.newInstance("//java/com/example:lib");
-    JavaLibrary javaLibrary = new FakeJavaLibrary(javaLibraryTarget, resolver);
+    JvmLibrary jvmLibrary = new FakeJavaLibrary(javaLibraryTarget, resolver);
 
     BuildTarget buildTarget = BuildTargetFactory.newInstance("//java/com/example:lib#dex");
     BuildRuleParams params = new FakeBuildRuleParamsBuilder(buildTarget).build();
     DexProducedFromJavaLibrary dexFromJavaLibrary =
-        new DexProducedFromJavaLibrary(params, resolver, javaLibrary);
+        new DexProducedFromJavaLibrary(params, resolver, jvmLibrary);
     dexFromJavaLibrary.getBuildOutputInitializer().setBuildOutput(
         new DexProducedFromJavaLibrary.BuildOutput(
             /* linearAllocEstimate */ 1600,
@@ -65,12 +65,12 @@ public class DexWithClassesTest {
   public void testIntermediateDexRuleToDexWithClassesWhenIntermediateDexHasNoClasses() {
     SourcePathResolver resolver = new SourcePathResolver(new BuildRuleResolver());
     BuildTarget javaLibraryTarget = BuildTargetFactory.newInstance("//java/com/example:lib");
-    JavaLibrary javaLibrary = new FakeJavaLibrary(javaLibraryTarget, resolver);
+    JvmLibrary jvmLibrary = new FakeJavaLibrary(javaLibraryTarget, resolver);
 
     BuildTarget buildTarget = BuildTargetFactory.newInstance("//java/com/example:lib#dex");
     BuildRuleParams params = new FakeBuildRuleParamsBuilder(buildTarget).build();
     DexProducedFromJavaLibrary dexFromJavaLibrary =
-        new DexProducedFromJavaLibrary(params, resolver, javaLibrary);
+        new DexProducedFromJavaLibrary(params, resolver, jvmLibrary);
     dexFromJavaLibrary.getBuildOutputInitializer().setBuildOutput(
         new DexProducedFromJavaLibrary.BuildOutput(
             /* linearAllocEstimate */ 1600,

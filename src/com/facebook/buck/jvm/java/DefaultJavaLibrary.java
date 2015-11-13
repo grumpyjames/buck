@@ -25,7 +25,7 @@ import com.facebook.buck.graph.DirectedAcyclicGraph;
 import com.facebook.buck.graph.TopologicalSort;
 import com.facebook.buck.io.ProjectFilesystem;
 import com.facebook.buck.jvm.core.HasClasspathEntries;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargets;
@@ -97,8 +97,8 @@ import javax.annotation.Nullable;
  * from the {@code //src/com/facebook/feed/model:model} rule.
  */
 public class DefaultJavaLibrary extends AbstractBuildRule
-    implements JavaLibrary, HasClasspathEntries, ExportDependencies,
-    InitializableFromDisk<JavaLibrary.Data>, AndroidPackageable,
+    implements JvmLibrary, HasClasspathEntries, ExportDependencies,
+    InitializableFromDisk<JvmLibrary.Data>, AndroidPackageable,
     SupportsInputBasedRuleKey, HasTests {
 
   private static final BuildableProperties OUTPUT_TYPE = new BuildableProperties(LIBRARY);
@@ -120,12 +120,12 @@ public class DefaultJavaLibrary extends AbstractBuildRule
   private final ImmutableSortedSet<BuildRule> providedDeps;
   // Some classes need to override this when enhancing deps (see AndroidLibrary).
   private final ImmutableSet<Path> additionalClasspathEntries;
-  private final Supplier<ImmutableSetMultimap<JavaLibrary, Path>>
+  private final Supplier<ImmutableSetMultimap<JvmLibrary, Path>>
       outputClasspathEntriesSupplier;
-  private final Supplier<ImmutableSetMultimap<JavaLibrary, Path>>
+  private final Supplier<ImmutableSetMultimap<JvmLibrary, Path>>
       transitiveClasspathEntriesSupplier;
-  private final Supplier<ImmutableSet<JavaLibrary>> transitiveClasspathDepsSupplier;
-  private final Supplier<ImmutableSetMultimap<JavaLibrary, Path>>
+  private final Supplier<ImmutableSet<JvmLibrary>> transitiveClasspathDepsSupplier;
+  private final Supplier<ImmutableSetMultimap<JvmLibrary, Path>>
       declaredClasspathEntriesSupplier;
 
   private final SourcePath abiJar;
@@ -251,7 +251,7 @@ public class DefaultJavaLibrary extends AbstractBuildRule
     // Exported deps are meant to be forwarded onto the CLASSPATH for dependents,
     // and so only make sense for java library types.
     for (BuildRule dep : exportedDeps) {
-      if (!(dep instanceof JavaLibrary)) {
+      if (!(dep instanceof JvmLibrary)) {
         throw new HumanReadableException(
             params.getBuildTarget() + ": exported dep " +
             dep.getBuildTarget() + " (" + dep.getType() + ") " +
@@ -281,9 +281,9 @@ public class DefaultJavaLibrary extends AbstractBuildRule
     }
 
     this.outputClasspathEntriesSupplier =
-        Suppliers.memoize(new Supplier<ImmutableSetMultimap<JavaLibrary, Path>>() {
+        Suppliers.memoize(new Supplier<ImmutableSetMultimap<JvmLibrary, Path>>() {
           @Override
-          public ImmutableSetMultimap<JavaLibrary, Path> get() {
+          public ImmutableSetMultimap<JvmLibrary, Path> get() {
             return JavaLibraryClasspathProvider.getOutputClasspathEntries(
                 DefaultJavaLibrary.this,
                 outputJar);
@@ -291,9 +291,9 @@ public class DefaultJavaLibrary extends AbstractBuildRule
         });
 
     this.transitiveClasspathEntriesSupplier =
-        Suppliers.memoize(new Supplier<ImmutableSetMultimap<JavaLibrary, Path>>() {
+        Suppliers.memoize(new Supplier<ImmutableSetMultimap<JvmLibrary, Path>>() {
           @Override
-          public ImmutableSetMultimap<JavaLibrary, Path> get() {
+          public ImmutableSetMultimap<JvmLibrary, Path> get() {
             return JavaLibraryClasspathProvider.getTransitiveClasspathEntries(
                 DefaultJavaLibrary.this,
                 outputJar);
@@ -302,9 +302,9 @@ public class DefaultJavaLibrary extends AbstractBuildRule
 
     this.transitiveClasspathDepsSupplier =
         Suppliers.memoize(
-            new Supplier<ImmutableSet<JavaLibrary>>() {
+            new Supplier<ImmutableSet<JvmLibrary>>() {
               @Override
-              public ImmutableSet<JavaLibrary> get() {
+              public ImmutableSet<JvmLibrary> get() {
                 return JavaLibraryClasspathProvider.getTransitiveClasspathDeps(
                     DefaultJavaLibrary.this,
                     outputJar);
@@ -312,9 +312,9 @@ public class DefaultJavaLibrary extends AbstractBuildRule
             });
 
     this.declaredClasspathEntriesSupplier =
-        Suppliers.memoize(new Supplier<ImmutableSetMultimap<JavaLibrary, Path>>() {
+        Suppliers.memoize(new Supplier<ImmutableSetMultimap<JvmLibrary, Path>>() {
           @Override
-          public ImmutableSetMultimap<JavaLibrary, Path> get() {
+          public ImmutableSetMultimap<JvmLibrary, Path> get() {
             return JavaLibraryClasspathProvider.getDeclaredClasspathEntries(
                 DefaultJavaLibrary.this);
           }
@@ -413,22 +413,22 @@ public class DefaultJavaLibrary extends AbstractBuildRule
   }
 
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getTransitiveClasspathEntries() {
+  public ImmutableSetMultimap<JvmLibrary, Path> getTransitiveClasspathEntries() {
     return transitiveClasspathEntriesSupplier.get();
   }
 
   @Override
-  public ImmutableSet<JavaLibrary> getTransitiveClasspathDeps() {
+  public ImmutableSet<JvmLibrary> getTransitiveClasspathDeps() {
     return transitiveClasspathDepsSupplier.get();
   }
 
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getDeclaredClasspathEntries() {
+  public ImmutableSetMultimap<JvmLibrary, Path> getDeclaredClasspathEntries() {
     return declaredClasspathEntriesSupplier.get();
   }
 
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getOutputClasspathEntries() {
+  public ImmutableSetMultimap<JvmLibrary, Path> getOutputClasspathEntries() {
     return outputClasspathEntriesSupplier.get();
   }
 
@@ -464,8 +464,8 @@ public class DefaultJavaLibrary extends AbstractBuildRule
           .build();
     }
 
-    ImmutableSetMultimap<JavaLibrary, Path> declaredClasspathEntries =
-        ImmutableSetMultimap.<JavaLibrary, Path>builder()
+    ImmutableSetMultimap<JvmLibrary, Path> declaredClasspathEntries =
+        ImmutableSetMultimap.<JvmLibrary, Path>builder()
             .putAll(getDeclaredClasspathEntries())
             .putAll(this, additionalClasspathEntries)
             .build();
@@ -496,9 +496,9 @@ public class DefaultJavaLibrary extends AbstractBuildRule
     // compile time.
     Collection<Path> provided = JavaLibraryClasspathProvider.getJavaLibraryDeps(providedDeps)
         .transformAndConcat(
-            new Function<JavaLibrary, Collection<Path>>() {
+            new Function<JvmLibrary, Collection<Path>>() {
               @Override
-              public Collection<Path> apply(JavaLibrary input) {
+              public Collection<Path> apply(JvmLibrary input) {
                 return input.getOutputClasspathEntries().values();
               }
             })
@@ -597,13 +597,13 @@ public class DefaultJavaLibrary extends AbstractBuildRule
       BuildRule transitiveNotDeclaredRule,
       Set<String> failedImports,
       JarResolver jarResolver) {
-    if (!(transitiveNotDeclaredRule instanceof JavaLibrary)) {
+    if (!(transitiveNotDeclaredRule instanceof JvmLibrary)) {
       return false;
     }
 
     ImmutableSet<Path> classPaths =
         ImmutableSet.copyOf(
-            ((JavaLibrary) transitiveNotDeclaredRule).getOutputClasspathEntries().values());
+            ((JvmLibrary) transitiveNotDeclaredRule).getOutputClasspathEntries().values());
     boolean containsMissingBuildRule = false;
     // Open the output jar for every jar contained as the output of transitiveNotDeclaredDep.  With
     // the exception of rules that export their dependencies, this will result in a single
@@ -633,32 +633,32 @@ public class DefaultJavaLibrary extends AbstractBuildRule
   @VisibleForTesting
   Optional<JavacStep.SuggestBuildRules> createSuggestBuildFunction(
       final BuildContext context,
-      final ImmutableSetMultimap<JavaLibrary, Path> declaredClasspathEntries,
+      final ImmutableSetMultimap<JvmLibrary, Path> declaredClasspathEntries,
       final JarResolver jarResolver) {
 
-    final Supplier<ImmutableList<JavaLibrary>> sortedTransitiveNotDeclaredDeps =
+    final Supplier<ImmutableList<JvmLibrary>> sortedTransitiveNotDeclaredDeps =
         Suppliers.memoize(
-            new Supplier<ImmutableList<JavaLibrary>>() {
+            new Supplier<ImmutableList<JvmLibrary>>() {
               @Override
-              public ImmutableList<JavaLibrary> get() {
-                ImmutableSetMultimap<JavaLibrary, Path> transitiveClasspathEntries =
-                    ImmutableSetMultimap.<JavaLibrary, Path>builder()
+              public ImmutableList<JvmLibrary> get() {
+                ImmutableSetMultimap<JvmLibrary, Path> transitiveClasspathEntries =
+                    ImmutableSetMultimap.<JvmLibrary, Path>builder()
                         .putAll(getTransitiveClasspathEntries())
                         .putAll(
                             DefaultJavaLibrary.this,
                             DefaultJavaLibrary.this.additionalClasspathEntries)
                         .build();
-                Set<JavaLibrary> transitiveNotDeclaredDeps = Sets.difference(
+                Set<JvmLibrary> transitiveNotDeclaredDeps = Sets.difference(
                     transitiveClasspathEntries.keySet(),
                     Sets.union(ImmutableSet.of(this), declaredClasspathEntries.keySet()));
                 DirectedAcyclicGraph<BuildRule> graph =
                     BuildRuleDependencyVisitors.getBuildRuleDirectedGraphFilteredBy(
                         context.getActionGraph().getNodes(),
-                        Predicates.instanceOf(JavaLibrary.class),
-                        Predicates.instanceOf(JavaLibrary.class));
+                        Predicates.instanceOf(JvmLibrary.class),
+                        Predicates.instanceOf(JvmLibrary.class));
                 return FluentIterable
                     .from(TopologicalSort.sort(graph, Predicates.<BuildRule>alwaysTrue()))
-                    .filter(JavaLibrary.class)
+                    .filter(JvmLibrary.class)
                     .filter(Predicates.in(transitiveNotDeclaredDeps))
                     .toList()
                     .reverse();
@@ -674,7 +674,7 @@ public class DefaultJavaLibrary extends AbstractBuildRule
 
         Set<String> remainingImports = Sets.newHashSet(failedImports);
 
-        for (JavaLibrary transitiveNotDeclaredDep : sortedTransitiveNotDeclaredDeps.get()) {
+        for (JvmLibrary transitiveNotDeclaredDep : sortedTransitiveNotDeclaredDeps.get()) {
           if (isMissingBuildRule(filesystem,
                   transitiveNotDeclaredDep,
                   remainingImports,
@@ -696,7 +696,7 @@ public class DefaultJavaLibrary extends AbstractBuildRule
    * Instructs this rule to report the ABI it has on disk as its current ABI.
    */
   @Override
-  public JavaLibrary.Data initializeFromDisk(OnDiskBuildInfo onDiskBuildInfo) throws IOException {
+  public JvmLibrary.Data initializeFromDisk(OnDiskBuildInfo onDiskBuildInfo) throws IOException {
     return JavaLibraryRules.initializeFromDisk(getBuildTarget(), onDiskBuildInfo);
   }
 

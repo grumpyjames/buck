@@ -16,7 +16,7 @@
 
 package com.facebook.buck.jvm.java;
 
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.model.UnflavoredBuildTarget;
@@ -101,7 +101,7 @@ public class PrebuiltJarDescription implements Description<PrebuiltJarDescriptio
 
     UnflavoredBuildTarget prebuiltJarBuildTarget = params.getBuildTarget().checkUnflavored();
     BuildTarget flavoredBuildTarget = BuildTargets.createFlavoredBuildTarget(
-        prebuiltJarBuildTarget, JavaLibrary.GWT_MODULE_FLAVOR);
+        prebuiltJarBuildTarget, JvmLibrary.GWT_MODULE_FLAVOR);
     BuildRuleParams gwtParams = params.copyWithChanges(
         flavoredBuildTarget,
         /* declaredDeps */ Suppliers.ofInstance(ImmutableSortedSet.of(prebuilt)),

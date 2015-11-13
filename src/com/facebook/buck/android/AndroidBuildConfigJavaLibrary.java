@@ -17,7 +17,7 @@
 package com.facebook.buck.android;
 
 import com.facebook.buck.jvm.java.DefaultJavaLibrary;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.JavacOptions;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.rules.BuildRule;
@@ -35,7 +35,7 @@ import java.nio.file.Path;
 
 
 /**
- * {@link JavaLibrary} that wraps the output of an {@link AndroidBuildConfig}.
+ * {@link JvmLibrary} that wraps the output of an {@link AndroidBuildConfig}.
  * <p>
  * This is a custom subclass of {@link DefaultJavaLibrary} so that it can have special behavior
  * when being traversed by an {@link AndroidPackageableCollector}.

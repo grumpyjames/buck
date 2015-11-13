@@ -17,7 +17,7 @@
 package com.facebook.buck.android;
 
 import com.facebook.buck.graph.AbstractBreadthFirstTraversal;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.JavaTest;
 import com.facebook.buck.rules.BuildRule;
 import com.facebook.buck.rules.BuildRuleDependencyVisitors;
@@ -35,7 +35,7 @@ public class UnsortedAndroidResourceDeps {
       AndroidLibrary.class,
       AndroidResource.class,
       ApkGenrule.class,
-      JavaLibrary.class,
+      JvmLibrary.class,
       JavaTest.class,
       RobolectricTest.class);
 

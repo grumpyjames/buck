@@ -18,7 +18,7 @@ package com.facebook.buck.gwt;
 
 import com.facebook.buck.graph.AbstractBreadthFirstTraversal;
 import com.facebook.buck.gwt.GwtBinary.Style;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.rules.BuildRule;
@@ -78,24 +78,24 @@ public class GwtBinaryDescription implements Description<GwtBinaryDescription.Ar
 
     final ImmutableSortedSet.Builder<BuildRule> extraDeps = ImmutableSortedSet.naturalOrder();
 
-    // Find all of the reachable JavaLibrary rules and grab their associated GwtModules.
+    // Find all of the reachable JvmLibrary rules and grab their associated GwtModules.
     final ImmutableSortedSet.Builder<Path> gwtModuleJarsBuilder =
         ImmutableSortedSet.naturalOrder();
     ImmutableSortedSet<BuildRule> moduleDependencies = resolver.getAllRules(args.moduleDeps.get());
     new AbstractBreadthFirstTraversal<BuildRule>(moduleDependencies) {
       @Override
       public ImmutableSet<BuildRule> visit(BuildRule rule) {
-        if (!(rule instanceof JavaLibrary)) {
+        if (!(rule instanceof JvmLibrary)) {
           return ImmutableSet.of();
         }
 
-        JavaLibrary javaLibrary = (JavaLibrary) rule;
+        JvmLibrary jvmLibrary = (JvmLibrary) rule;
         BuildTarget gwtModuleTarget = BuildTargets.createFlavoredBuildTarget(
-            javaLibrary.getBuildTarget().checkUnflavored(),
-            JavaLibrary.GWT_MODULE_FLAVOR);
+            jvmLibrary.getBuildTarget().checkUnflavored(),
+            JvmLibrary.GWT_MODULE_FLAVOR);
         Optional<BuildRule> gwtModule = resolver.getRuleOptional(gwtModuleTarget);
 
-        // Note that gwtModule could be absent if javaLibrary is a rule with no srcs of its own,
+        // Note that gwtModule could be absent if jvmLibrary is a rule with no srcs of its own,
         // but a rule that exists only as a collection of deps.
         if (gwtModule.isPresent()) {
           extraDeps.add(gwtModule.get());

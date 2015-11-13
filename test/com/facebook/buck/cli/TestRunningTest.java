@@ -34,7 +34,7 @@ import static org.junit.Assert.assertTrue;
 import com.facebook.buck.io.MorePaths;
 import com.facebook.buck.jvm.java.DefaultJavaPackageFinder;
 import com.facebook.buck.jvm.java.FakeJavaLibrary;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.log.Logger;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargetFactory;
@@ -116,7 +116,7 @@ public class TestRunningTest {
     assertTrue(MorePaths.isGeneratedFile(pathToGenFile));
 
     ImmutableSortedSet<Path> javaSrcs = ImmutableSortedSet.of(pathToGenFile);
-    JavaLibrary javaLibrary = new FakeJavaLibrary(
+    JvmLibrary jvmLibrary = new FakeJavaLibrary(
         BuildTargetFactory.newInstance("//foo:bar"),
         new SourcePathResolver(new BuildRuleResolver())).setJavaSrcs(javaSrcs);
 
@@ -127,7 +127,7 @@ public class TestRunningTest {
     replay(mocks);
 
     ImmutableSet<String> result = TestRunning.getPathToSourceFolders(
-        javaLibrary, Optional.of(defaultJavaPackageFinder), new FakeProjectFilesystem());
+        jvmLibrary, Optional.of(defaultJavaPackageFinder), new FakeProjectFilesystem());
 
     assertTrue("No path should be returned if the library contains only generated files.",
         result.isEmpty());
@@ -145,7 +145,7 @@ public class TestRunningTest {
     assertFalse(MorePaths.isGeneratedFile(pathToNonGenFile));
 
     ImmutableSortedSet<Path> javaSrcs = ImmutableSortedSet.of(pathToNonGenFile);
-    JavaLibrary javaLibrary = new FakeJavaLibrary(
+    JvmLibrary jvmLibrary = new FakeJavaLibrary(
         BuildTargetFactory.newInstance("//foo:bar"),
         new SourcePathResolver(new BuildRuleResolver())).setJavaSrcs(javaSrcs);
 
@@ -157,9 +157,9 @@ public class TestRunningTest {
     replay(defaultJavaPackageFinder);
 
     ImmutableSet<String> result = TestRunning.getPathToSourceFolders(
-        javaLibrary, Optional.of(defaultJavaPackageFinder), new FakeProjectFilesystem());
+        jvmLibrary, Optional.of(defaultJavaPackageFinder), new FakeProjectFilesystem());
 
-    String expected = javaLibrary.getProjectFilesystem().getRootPath().resolve("package/src") + "/";
+    String expected = jvmLibrary.getProjectFilesystem().getRootPath().resolve("package/src") + "/";
     assertEquals("All non-generated source files are under one source tmp.",
         ImmutableSet.of(expected), result);
 
@@ -172,7 +172,7 @@ public class TestRunningTest {
     assertFalse(MorePaths.isGeneratedFile(pathToNonGenFile));
 
     ImmutableSortedSet<Path> javaSrcs = ImmutableSortedSet.of(pathToNonGenFile);
-    JavaLibrary javaLibrary = new FakeJavaLibrary(
+    JvmLibrary jvmLibrary = new FakeJavaLibrary(
         BuildTargetFactory.newInstance("//foo:bar"),
         new SourcePathResolver(new BuildRuleResolver())).setJavaSrcs(javaSrcs);
 
@@ -184,7 +184,7 @@ public class TestRunningTest {
     replay(defaultJavaPackageFinder);
 
     TestRunning.getPathToSourceFolders(
-        javaLibrary, Optional.of(defaultJavaPackageFinder), new FakeProjectFilesystem());
+        jvmLibrary, Optional.of(defaultJavaPackageFinder), new FakeProjectFilesystem());
 
     verify(defaultJavaPackageFinder);
   }
@@ -198,7 +198,7 @@ public class TestRunningTest {
     assertFalse(MorePaths.isGeneratedFile(pathToNonGenFile));
 
     ImmutableSortedSet<Path> javaSrcs = ImmutableSortedSet.of(pathToNonGenFile);
-    JavaLibrary javaLibrary = new FakeJavaLibrary(
+    JvmLibrary jvmLibrary = new FakeJavaLibrary(
         BuildTargetFactory.newInstance("//foo:bar"),
         new SourcePathResolver(new BuildRuleResolver())).setJavaSrcs(javaSrcs);
 
@@ -210,7 +210,7 @@ public class TestRunningTest {
     replay(mocks);
 
     ImmutableSet<String> result = TestRunning.getPathToSourceFolders(
-        javaLibrary, Optional.of(defaultJavaPackageFinder), new FakeProjectFilesystem());
+        jvmLibrary, Optional.of(defaultJavaPackageFinder), new FakeProjectFilesystem());
 
     assertEquals("All non-generated source files are under one source tmp.",
         ImmutableSet.of("java/"), result);
@@ -237,16 +237,16 @@ public class TestRunningTest {
     expect(defaultJavaPackageFinder.getPathsFromRoot()).andReturn(pathsFromRoot).times(2);
     expect(defaultJavaPackageFinder.getPathElements()).andReturn(pathElements).times(2);
 
-    JavaLibrary javaLibrary = new FakeJavaLibrary(
+    JvmLibrary jvmLibrary = new FakeJavaLibrary(
         BuildTargetFactory.newInstance("//foo:bar"),
         new SourcePathResolver(new BuildRuleResolver())).setJavaSrcs(javaSrcs);
 
     replay(defaultJavaPackageFinder);
 
     ImmutableSet<String> result = TestRunning.getPathToSourceFolders(
-        javaLibrary, Optional.of(defaultJavaPackageFinder), new FakeProjectFilesystem());
+        jvmLibrary, Optional.of(defaultJavaPackageFinder), new FakeProjectFilesystem());
 
-    Path rootPath = javaLibrary.getProjectFilesystem().getRootPath();
+    Path rootPath = jvmLibrary.getProjectFilesystem().getRootPath();
     ImmutableSet<String> expected = ImmutableSet.of(
         rootPath.resolve("package/src-gen").toString() + "/",
         rootPath.resolve("package/src").toString() + "/");

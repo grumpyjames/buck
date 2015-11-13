@@ -150,7 +150,7 @@ public class AndroidBuildConfigDescription
           .addFlavors(CalculateAbi.FLAVOR)
           .build();
 
-    // Create a second build rule to compile BuildConfig.java and expose it as a JavaLibrary.
+    // Create a second build rule to compile BuildConfig.java and expose it as a JvmLibrary.
     BuildRuleParams javaLibraryParams = params.copyWithChanges(
         params.getBuildTarget(),
         /* declaredDeps */ Suppliers.ofInstance(

@@ -16,7 +16,7 @@
 
 package com.facebook.buck.jvm.java;
 
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.rules.BuildRule;
 import com.facebook.buck.rules.RuleKeyAppendable;
 import com.facebook.buck.rules.RuleKeyBuilder;
@@ -193,9 +193,9 @@ abstract class AbstractJavacOptions implements RuleKeyAppendable {
         BuildRule rule = possibleRule.get();
 
         // And now include any transitive deps that contribute to the classpath.
-        if (rule instanceof JavaLibrary) {
+        if (rule instanceof JvmLibrary) {
           builder.addAll(
-              FluentIterable.from(((JavaLibrary) rule).getDepsForTransitiveClasspathEntries())
+              FluentIterable.from(((JvmLibrary) rule).getDepsForTransitiveClasspathEntries())
                   .transform(SourcePaths.getToBuildTargetSourcePath())
                   .toList());
         } else {

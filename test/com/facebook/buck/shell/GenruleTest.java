@@ -25,8 +25,8 @@ import static org.junit.Assert.assertTrue;
 
 import com.facebook.buck.android.AndroidPlatformTarget;
 import com.facebook.buck.io.ProjectFilesystem;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.JavaBinaryRuleBuilder;
-import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.jvm.java.JavaLibraryBuilder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargetFactory;
@@ -623,8 +623,8 @@ public class GenruleTest {
 
     // Create an initial input-based rule key
     BuildRuleResolver resolver = new BuildRuleResolver();
-    JavaLibrary dep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
+    JvmLibrary dep =
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
             .addSrc(Paths.get("source.java"))
             .build(resolver, filesystem);
     filesystem.writeContentsToPath("something", Paths.get("source.java"));
@@ -667,7 +667,7 @@ public class GenruleTest {
     // Make a change to the dep's output, which *should* affect the input-based rule key.
     resolver = new BuildRuleResolver();
     dep =
-        (JavaLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
+        (JvmLibrary) JavaLibraryBuilder.createBuilder(BuildTargetFactory.newInstance("//:dep"))
             .addSrc(Paths.get("source.java"))
             .build(resolver, filesystem);
     filesystem.writeContentsToPath("something else", dep.getPathToOutput());

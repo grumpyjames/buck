@@ -22,10 +22,10 @@ import static com.facebook.buck.rules.BuildableProperties.Kind.PACKAGING;
 import com.facebook.buck.android.FilterResourcesStep.ResourceFilter;
 import com.facebook.buck.android.ResourcesFilter.ResourceCompressionMode;
 import com.facebook.buck.io.ProjectFilesystem;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.AccumulateClassNamesStep;
 import com.facebook.buck.jvm.java.Classpaths;
 import com.facebook.buck.jvm.core.HasClasspathEntries;
-import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.jvm.java.Keystore;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargets;
@@ -200,7 +200,7 @@ public class AndroidBinary
   private final Optional<SourcePath> dexReorderToolFile;
   private final Optional<SourcePath> dexReorderDataDumpFile;
   @AddToRuleKey
-  protected final ImmutableSortedSet<JavaLibrary> rulesToExcludeFromDex;
+  protected final ImmutableSortedSet<JvmLibrary> rulesToExcludeFromDex;
   protected final AndroidGraphEnhancementResult enhancementResult;
   private final ListeningExecutorService dxExecutorService;
   @AddToRuleKey
@@ -228,7 +228,7 @@ public class AndroidBinary
       EnumSet<ExopackageMode> exopackageModes,
       Function<String, String> macroExpander,
       Optional<String> preprocessJavaClassesBash,
-      ImmutableSortedSet<JavaLibrary> rulesToExcludeFromDex,
+      ImmutableSortedSet<JvmLibrary> rulesToExcludeFromDex,
       AndroidGraphEnhancementResult enhancementResult,
       Optional<Boolean> reorderClassesIntraDex,
       Optional<SourcePath> dexReorderToolFile,
@@ -286,7 +286,7 @@ public class AndroidBinary
     return PROPERTIES;
   }
 
-  public ImmutableSortedSet<JavaLibrary> getRulesToExcludeFromDex() {
+  public ImmutableSortedSet<JvmLibrary> getRulesToExcludeFromDex() {
     return rulesToExcludeFromDex;
   }
 
@@ -814,11 +814,11 @@ public class AndroidBinary
       Set<Path> depsProguardConfigs,
       ImmutableList.Builder<Step> steps,
       BuildableContext buildableContext) {
-    final ImmutableSetMultimap<JavaLibrary, Path> classpathEntriesMap =
+    final ImmutableSetMultimap<JvmLibrary, Path> classpathEntriesMap =
         getTransitiveClasspathEntries();
     ImmutableSet.Builder<Path> additionalLibraryJarsForProguardBuilder = ImmutableSet.builder();
 
-    for (JavaLibrary buildRule : rulesToExcludeFromDex) {
+    for (JvmLibrary buildRule : rulesToExcludeFromDex) {
       additionalLibraryJarsForProguardBuilder.addAll(classpathEntriesMap.get(buildRule));
     }
 
@@ -1094,13 +1094,13 @@ public class AndroidBinary
   }
 
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getTransitiveClasspathEntries() {
+  public ImmutableSetMultimap<JvmLibrary, Path> getTransitiveClasspathEntries() {
     // This is used primarily for buck audit classpath.
     return Classpaths.getClasspathEntries(getClasspathDeps());
   }
 
   @Override
-  public ImmutableSet<JavaLibrary> getTransitiveClasspathDeps() {
+  public ImmutableSet<JvmLibrary> getTransitiveClasspathDeps() {
     return Classpaths.getClasspathDeps(getClasspathDeps());
   }
 

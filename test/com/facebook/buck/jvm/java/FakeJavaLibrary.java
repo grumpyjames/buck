@@ -20,7 +20,7 @@ import static com.facebook.buck.rules.BuildableProperties.Kind.LIBRARY;
 
 import com.facebook.buck.android.AndroidPackageable;
 import com.facebook.buck.android.AndroidPackageableCollector;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.rules.BuildRule;
@@ -43,7 +43,7 @@ import com.google.common.hash.HashCode;
 
 import java.nio.file.Path;
 
-public class FakeJavaLibrary extends FakeBuildRule implements JavaLibrary, AndroidPackageable {
+public class FakeJavaLibrary extends FakeBuildRule implements JvmLibrary, AndroidPackageable {
 
   private static final BuildableProperties OUTPUT_TYPE = new BuildableProperties(LIBRARY);
 
@@ -66,12 +66,12 @@ public class FakeJavaLibrary extends FakeBuildRule implements JavaLibrary, Andro
   }
 
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getDeclaredClasspathEntries() {
+  public ImmutableSetMultimap<JvmLibrary, Path> getDeclaredClasspathEntries() {
     return ImmutableSetMultimap.of();
   }
 
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getOutputClasspathEntries() {
+  public ImmutableSetMultimap<JvmLibrary, Path> getOutputClasspathEntries() {
     return ImmutableSetMultimap.of();
   }
 
@@ -81,14 +81,14 @@ public class FakeJavaLibrary extends FakeBuildRule implements JavaLibrary, Andro
   }
 
   @Override
-  public ImmutableSetMultimap<JavaLibrary, Path> getTransitiveClasspathEntries() {
+  public ImmutableSetMultimap<JvmLibrary, Path> getTransitiveClasspathEntries() {
     return JavaLibraryClasspathProvider.getTransitiveClasspathEntries(
         this,
         Optional.fromNullable(getPathToOutput()));
   }
 
   @Override
-  public ImmutableSet<JavaLibrary> getTransitiveClasspathDeps() {
+  public ImmutableSet<JvmLibrary> getTransitiveClasspathDeps() {
     return JavaLibraryClasspathProvider.getTransitiveClasspathDeps(
         this,
         Optional.fromNullable(getPathToOutput()));

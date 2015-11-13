@@ -19,7 +19,7 @@ package com.facebook.buck.jvm.java;
 import com.facebook.buck.cxx.CxxPlatform;
 import com.facebook.buck.graph.AbstractBreadthFirstTraversal;
 import com.facebook.buck.jvm.core.HasJavaAbi;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.core.JavaNativeLinkable;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargets;
@@ -45,7 +45,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * Common utilities for working with {@link JavaLibrary} objects.
+ * Common utilities for working with {@link JvmLibrary} objects.
  */
 public class JavaLibraryRules {
 
@@ -53,22 +53,22 @@ public class JavaLibraryRules {
   private JavaLibraryRules() {}
 
   static void addAccumulateClassNamesStep(
-      JavaLibrary javaLibrary,
+      JvmLibrary jvmLibrary,
       BuildableContext buildableContext,
       ImmutableList.Builder<Step> steps) {
 
     Path pathToClassHashes = JavaLibraryRules.getPathToClassHashes(
-        javaLibrary.getBuildTarget());
-    steps.add(new MkdirStep(javaLibrary.getProjectFilesystem(), pathToClassHashes.getParent()));
+        jvmLibrary.getBuildTarget());
+    steps.add(new MkdirStep(jvmLibrary.getProjectFilesystem(), pathToClassHashes.getParent()));
     steps.add(
         new AccumulateClassNamesStep(
-            javaLibrary.getProjectFilesystem(),
-            Optional.fromNullable(javaLibrary.getPathToOutput()),
+            jvmLibrary.getProjectFilesystem(),
+            Optional.fromNullable(jvmLibrary.getPathToOutput()),
             pathToClassHashes));
     buildableContext.recordArtifact(pathToClassHashes);
   }
 
-  static JavaLibrary.Data initializeFromDisk(
+  static JvmLibrary.Data initializeFromDisk(
       BuildTarget buildTarget,
       OnDiskBuildInfo onDiskBuildInfo)
       throws IOException {
@@ -84,7 +84,7 @@ public class JavaLibraryRules {
     ImmutableSortedMap<String, HashCode> classHashes = AccumulateClassNamesStep.parseClassHashes(
         lines);
 
-    return new JavaLibrary.Data(classHashes);
+    return new JvmLibrary.Data(classHashes);
   }
 
   private static Path getPathToClassHashes(BuildTarget buildTarget) {
@@ -109,7 +109,7 @@ public class JavaLibraryRules {
           libraries.putAll(linkable.getSharedLibraries(targetGraph, cxxPlatform));
         }
         if (rule instanceof JavaNativeLinkable ||
-            rule instanceof JavaLibrary) {
+            rule instanceof JvmLibrary) {
           return rule.getDeps();
         } else {
           return ImmutableSet.of();

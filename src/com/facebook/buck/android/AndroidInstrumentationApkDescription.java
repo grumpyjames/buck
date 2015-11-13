@@ -21,8 +21,8 @@ import static com.facebook.buck.model.HasBuildTarget.TO_TARGET;
 import com.facebook.buck.android.AndroidBinary.ExopackageMode;
 import com.facebook.buck.android.AndroidBinary.PackageType;
 import com.facebook.buck.android.ResourcesFilter.ResourceCompressionMode;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.Classpaths;
-import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.jvm.java.JavacOptions;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.HasBuildTarget;
@@ -97,8 +97,8 @@ public class AndroidInstrumentationApkDescription
     }
     AndroidBinary apkUnderTest = getUnderlyingApk((InstallableApk) installableApk);
 
-    ImmutableSortedSet<JavaLibrary> rulesToExcludeFromDex = FluentIterable.from(
-        ImmutableSet.<JavaLibrary>builder()
+    ImmutableSortedSet<JvmLibrary> rulesToExcludeFromDex = FluentIterable.from(
+        ImmutableSet.<JvmLibrary>builder()
             .addAll(apkUnderTest.getRulesToExcludeFromDex())
             .addAll(Classpaths.getClasspathEntries(apkUnderTest.getClasspathDeps()).keySet())
             .build())

@@ -21,9 +21,9 @@ import static com.facebook.buck.jvm.java.JacocoConstants.JACOCO_OUTPUT_DIR;
 import com.facebook.buck.event.ConsoleEvent;
 import com.facebook.buck.io.MorePaths;
 import com.facebook.buck.io.ProjectFilesystem;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.DefaultJavaPackageFinder;
 import com.facebook.buck.jvm.java.GenerateCodeCoverageReportStep;
-import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.jvm.java.JavaTest;
 import com.facebook.buck.log.Logger;
 import com.facebook.buck.model.BuildTarget;
@@ -134,7 +134,7 @@ public class TestRunning {
       BuckConstant.setOneTimeTestSubdirectory(UUID.randomUUID().toString());
     }
 
-    ImmutableSet<JavaLibrary> rulesUnderTest;
+    ImmutableSet<JvmLibrary> rulesUnderTest;
     // If needed, we first run instrumentation on the class files.
     if (options.isCodeCoverageEnabled()) {
       rulesUnderTest = getRulesUnderTest(tests);
@@ -144,7 +144,7 @@ public class TestRunning {
           // tests from a different repo, but it'll help us bootstrap ourselves to being able to
           // support multiple repos
           // TODO(t8220837): Support tests in multiple repos
-          JavaLibrary library = rulesUnderTest.iterator().next();
+          JvmLibrary library = rulesUnderTest.iterator().next();
           stepRunner.runStepForBuildTarget(
               new MakeCleanDirectoryStep(library.getProjectFilesystem(), JACOCO_OUTPUT_DIR),
               Optional.<BuildTarget>absent());
@@ -615,8 +615,8 @@ public class TestRunning {
   /**
    * Generates the set of Java library rules under test.
    */
-  private static ImmutableSet<JavaLibrary> getRulesUnderTest(Iterable<TestRule> tests) {
-    ImmutableSet.Builder<JavaLibrary> rulesUnderTest = ImmutableSet.builder();
+  private static ImmutableSet<JvmLibrary> getRulesUnderTest(Iterable<TestRule> tests) {
+    ImmutableSet.Builder<JvmLibrary> rulesUnderTest = ImmutableSet.builder();
 
     // Gathering all rules whose source will be under test.
     for (TestRule test : tests) {
@@ -626,9 +626,9 @@ public class TestRunning {
         // First, look at sourceUnderTest.
         ImmutableSet<BuildRule> sourceUnderTest = javaTest.getSourceUnderTest();
         for (BuildRule buildRule : sourceUnderTest) {
-          if (buildRule instanceof JavaLibrary) {
-            JavaLibrary javaLibrary = (JavaLibrary) buildRule;
-            rulesUnderTest.add(javaLibrary);
+          if (buildRule instanceof JvmLibrary) {
+            JvmLibrary jvmLibrary = (JvmLibrary) buildRule;
+            rulesUnderTest.add(jvmLibrary);
           } else {
             throw new HumanReadableException(
                 "Test '%s' is a java_test() " +
@@ -640,8 +640,8 @@ public class TestRunning {
         }
 
         // Then, look at the transitive dependencies for `tests` attribute that refers to this test.
-        ImmutableSet<JavaLibrary> transitiveDeps = javaTest.getTransitiveClasspathDeps();
-        for (JavaLibrary dep: transitiveDeps) {
+        ImmutableSet<JvmLibrary> transitiveDeps = javaTest.getTransitiveClasspathDeps();
+        for (JvmLibrary dep: transitiveDeps) {
           if (dep instanceof HasTests) {
             ImmutableSortedSet<BuildTarget> depTests = ((HasTests) dep).getTests();
             if (depTests.contains(test.getBuildTarget())) {
@@ -751,7 +751,7 @@ public class TestRunning {
    * files tested during the test run.
    */
   private static Step getReportCommand(
-      ImmutableSet<JavaLibrary> rulesUnderTest,
+      ImmutableSet<JvmLibrary> rulesUnderTest,
       Optional<DefaultJavaPackageFinder> defaultJavaPackageFinderOptional,
       ProjectFilesystem filesystem,
       Path outputDirectory,
@@ -761,7 +761,7 @@ public class TestRunning {
     ImmutableSet.Builder<Path> pathsToClasses = ImmutableSet.builder();
 
     // Add all source directories of java libraries that we are testing to -sourcepath.
-    for (JavaLibrary rule : rulesUnderTest) {
+    for (JvmLibrary rule : rulesUnderTest) {
       ImmutableSet<String> sourceFolderPath =
           getPathToSourceFolders(rule, defaultJavaPackageFinderOptional, filesystem);
       if (!sourceFolderPath.isEmpty()) {
@@ -788,7 +788,7 @@ public class TestRunning {
    */
   @VisibleForTesting
   static ImmutableSet<String> getPathToSourceFolders(
-      JavaLibrary rule,
+      JvmLibrary rule,
       Optional<DefaultJavaPackageFinder> defaultJavaPackageFinderOptional,
       ProjectFilesystem filesystem) {
     ImmutableSet<Path> javaSrcs = rule.getJavaSrcs();

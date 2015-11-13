@@ -16,7 +16,7 @@
 
 package com.facebook.buck.gwt;
 
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.rules.AbstractBuildRule;
@@ -201,12 +201,12 @@ public class GwtBinary extends AbstractBuildRule {
     ImmutableSet.Builder<Path> classpathEntries = ImmutableSet.builder();
     classpathEntries.addAll(gwtModuleJars);
     for (BuildRule dep : getDeclaredDeps()) {
-      if (!(dep instanceof JavaLibrary)) {
+      if (!(dep instanceof JvmLibrary)) {
         continue;
       }
 
-      JavaLibrary javaLibrary = (JavaLibrary) dep;
-      for (Path path : javaLibrary.getOutputClasspathEntries().values()) {
+      JvmLibrary jvmLibrary = (JvmLibrary) dep;
+      for (Path path : jvmLibrary.getOutputClasspathEntries().values()) {
         classpathEntries.add(path);
       }
     }

@@ -16,7 +16,7 @@
 
 package com.facebook.buck.jvm.java;
 
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.rules.BuildRule;
 import com.facebook.buck.rules.ExportDependencies;
 import com.google.common.base.Optional;
@@ -32,48 +32,48 @@ public class JavaLibraryClasspathProvider {
   private JavaLibraryClasspathProvider() {
   }
 
-  public static ImmutableSetMultimap<JavaLibrary, Path> getOutputClasspathEntries(
-      JavaLibrary javaLibraryRule,
+  public static ImmutableSetMultimap<JvmLibrary, Path> getOutputClasspathEntries(
+      JvmLibrary jvmLibraryRule,
       Optional<Path> outputJar) {
-    ImmutableSetMultimap.Builder<JavaLibrary, Path> outputClasspathBuilder =
+    ImmutableSetMultimap.Builder<JvmLibrary, Path> outputClasspathBuilder =
         ImmutableSetMultimap.builder();
-    Iterable<JavaLibrary> javaExportedLibraryDeps;
-    if (javaLibraryRule instanceof ExportDependencies) {
+    Iterable<JvmLibrary> javaExportedLibraryDeps;
+    if (jvmLibraryRule instanceof ExportDependencies) {
       javaExportedLibraryDeps =
-          getJavaLibraryDeps(((ExportDependencies) javaLibraryRule).getExportedDeps());
+          getJavaLibraryDeps(((ExportDependencies) jvmLibraryRule).getExportedDeps());
     } else {
       javaExportedLibraryDeps = Sets.newHashSet();
     }
 
-    for (JavaLibrary rule : javaExportedLibraryDeps) {
+    for (JvmLibrary rule : javaExportedLibraryDeps) {
       outputClasspathBuilder.putAll(rule, rule.getOutputClasspathEntries().values());
       // If we have any exported deps, add an entry mapping ourselves to to their,
       // classpaths so when suggesting libraries to add we know that adding this library
       // would pull in it's deps.
       outputClasspathBuilder.putAll(
-          javaLibraryRule,
+          jvmLibraryRule,
           rule.getOutputClasspathEntries().values());
     }
 
     if (outputJar.isPresent()) {
-      outputClasspathBuilder.put(javaLibraryRule, outputJar.get());
+      outputClasspathBuilder.put(jvmLibraryRule, outputJar.get());
     }
 
     return outputClasspathBuilder.build();
   }
 
-  public static ImmutableSetMultimap<JavaLibrary, Path> getTransitiveClasspathEntries(
-      JavaLibrary javaLibraryRule,
+  public static ImmutableSetMultimap<JvmLibrary, Path> getTransitiveClasspathEntries(
+      JvmLibrary jvmLibraryRule,
       Optional<Path> outputJar) {
-    final ImmutableSetMultimap.Builder<JavaLibrary, Path> classpathEntries =
+    final ImmutableSetMultimap.Builder<JvmLibrary, Path> classpathEntries =
         ImmutableSetMultimap.builder();
-    ImmutableSetMultimap<JavaLibrary, Path> classpathEntriesForDeps =
-        Classpaths.getClasspathEntries(javaLibraryRule.getDepsForTransitiveClasspathEntries());
+    ImmutableSetMultimap<JvmLibrary, Path> classpathEntriesForDeps =
+        Classpaths.getClasspathEntries(jvmLibraryRule.getDepsForTransitiveClasspathEntries());
 
-    ImmutableSetMultimap<JavaLibrary, Path> classpathEntriesForExportedsDeps;
-    if (javaLibraryRule instanceof ExportDependencies) {
+    ImmutableSetMultimap<JvmLibrary, Path> classpathEntriesForExportedsDeps;
+    if (jvmLibraryRule instanceof ExportDependencies) {
       classpathEntriesForExportedsDeps =
-          Classpaths.getClasspathEntries(((ExportDependencies) javaLibraryRule).getExportedDeps());
+          Classpaths.getClasspathEntries(((ExportDependencies) jvmLibraryRule).getExportedDeps());
     } else {
       classpathEntriesForExportedsDeps = ImmutableSetMultimap.of();
     }
@@ -85,50 +85,50 @@ public class JavaLibraryClasspathProvider {
     // it's deps.
     if (!classpathEntriesForExportedsDeps.isEmpty()) {
       classpathEntries.putAll(
-          javaLibraryRule,
+          jvmLibraryRule,
           classpathEntriesForExportedsDeps.values());
     }
 
     // Only add ourselves to the classpath if there's a jar to be built.
     if (outputJar.isPresent()) {
-      classpathEntries.put(javaLibraryRule, outputJar.get());
+      classpathEntries.put(jvmLibraryRule, outputJar.get());
     }
 
     return classpathEntries.build();
   }
 
-  public static ImmutableSet<JavaLibrary> getTransitiveClasspathDeps(
-      JavaLibrary javaLibrary,
+  public static ImmutableSet<JvmLibrary> getTransitiveClasspathDeps(
+      JvmLibrary jvmLibrary,
       Optional<Path> outputJar) {
-    ImmutableSet.Builder<JavaLibrary> classpathDeps = ImmutableSet.builder();
+    ImmutableSet.Builder<JvmLibrary> classpathDeps = ImmutableSet.builder();
 
     classpathDeps.addAll(
         Classpaths.getClasspathDeps(
-            javaLibrary.getDepsForTransitiveClasspathEntries()));
+            jvmLibrary.getDepsForTransitiveClasspathEntries()));
 
     // Only add ourselves to the classpath if there's a jar to be built.
     if (outputJar.isPresent()) {
-      classpathDeps.add(javaLibrary);
+      classpathDeps.add(jvmLibrary);
     }
 
     return classpathDeps.build();
   }
 
-  public static ImmutableSetMultimap<JavaLibrary, Path> getDeclaredClasspathEntries(
-      JavaLibrary javaLibraryRule) {
-    final ImmutableSetMultimap.Builder<JavaLibrary, Path> classpathEntries =
+  public static ImmutableSetMultimap<JvmLibrary, Path> getDeclaredClasspathEntries(
+      JvmLibrary jvmLibraryRule) {
+    final ImmutableSetMultimap.Builder<JvmLibrary, Path> classpathEntries =
         ImmutableSetMultimap.builder();
 
-    Iterable<JavaLibrary> javaLibraryDeps = getJavaLibraryDeps(
-        javaLibraryRule.getDepsForTransitiveClasspathEntries());
+    Iterable<JvmLibrary> javaLibraryDeps = getJavaLibraryDeps(
+        jvmLibraryRule.getDepsForTransitiveClasspathEntries());
 
-    for (JavaLibrary rule : javaLibraryDeps) {
+    for (JvmLibrary rule : javaLibraryDeps) {
       classpathEntries.putAll(rule, rule.getOutputClasspathEntries().values());
     }
     return classpathEntries.build();
   }
 
-  static FluentIterable<JavaLibrary> getJavaLibraryDeps(Iterable<BuildRule> deps) {
-    return FluentIterable.from(deps).filter(JavaLibrary.class);
+  static FluentIterable<JvmLibrary> getJavaLibraryDeps(Iterable<BuildRule> deps) {
+    return FluentIterable.from(deps).filter(JvmLibrary.class);
   }
 }

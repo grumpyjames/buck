@@ -17,9 +17,9 @@
 package com.facebook.buck.android;
 
 import com.facebook.buck.android.AndroidLibraryGraphEnhancer.ResourceDependencyMode;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.AnnotationProcessingParams;
 import com.facebook.buck.jvm.java.CalculateAbi;
-import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.jvm.java.JavaLibraryDescription;
 import com.facebook.buck.jvm.java.JavaSourceJar;
 import com.facebook.buck.jvm.java.JavacOptions;
@@ -77,7 +77,7 @@ public class AndroidLibraryDescription
       BuildRuleResolver resolver,
       A args) {
     SourcePathResolver pathResolver = new SourcePathResolver(resolver);
-    if (params.getBuildTarget().getFlavors().contains(JavaLibrary.SRC_JAR)) {
+    if (params.getBuildTarget().getFlavors().contains(JvmLibrary.SRC_JAR)) {
       return new JavaSourceJar(params, pathResolver, args.srcs.get(), args.mavenCoords);
     }
 
@@ -175,7 +175,7 @@ public class AndroidLibraryDescription
   @Override
   public boolean hasFlavors(ImmutableSet<Flavor> flavors) {
     return flavors.isEmpty() ||
-        flavors.equals(ImmutableSet.of(JavaLibrary.SRC_JAR)) ||
+        flavors.equals(ImmutableSet.of(JvmLibrary.SRC_JAR)) ||
         flavors.equals(ImmutableSet.of(DUMMY_R_DOT_JAVA_FLAVOR));
   }
 

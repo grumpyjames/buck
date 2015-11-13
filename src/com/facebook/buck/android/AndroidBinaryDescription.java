@@ -24,7 +24,7 @@ import com.facebook.buck.android.FilterResourcesStep.ResourceFilter;
 import com.facebook.buck.android.NdkCxxPlatforms.TargetCpuType;
 import com.facebook.buck.android.ResourcesFilter.ResourceCompressionMode;
 import com.facebook.buck.dalvik.ZipSplitter.DexSplitStrategy;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.jvm.java.JavacOptions;
 import com.facebook.buck.jvm.java.Keystore;
 import com.facebook.buck.log.Logger;
@@ -221,9 +221,9 @@ public class AndroidBinaryDescription
     }
 
     ImmutableSortedSet<BuildRule> buildRulesToExcludeFromDex = builder.build();
-    ImmutableSortedSet<JavaLibrary> rulesToExcludeFromDex =
+    ImmutableSortedSet<JvmLibrary> rulesToExcludeFromDex =
         FluentIterable.from(buildRulesToExcludeFromDex)
-            .filter(JavaLibrary.class)
+            .filter(JvmLibrary.class)
             .toSortedSet(HasBuildTarget.BUILD_TARGET_COMPARATOR);
 
     SourcePathResolver pathResolver = new SourcePathResolver(resolver);

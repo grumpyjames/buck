@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import com.facebook.buck.io.DefaultDirectoryTraverser;
-import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.JvmLibrary;
 import com.facebook.buck.model.BuildTargetFactory;
 import com.facebook.buck.rules.BuildRule;
 import com.facebook.buck.rules.BuildRuleParams;
@@ -84,7 +84,7 @@ public class JavaBinaryTest {
                 null,
                 /* blacklist */ ImmutableSet.<String>of(),
                 new DefaultDirectoryTraverser(),
-                ImmutableSetMultimap.<JavaLibrary, Path>of()));
+                ImmutableSetMultimap.<JvmLibrary, Path>of()));
 
     // Strip the trailing "." from the absolute path to the current directory.
     final String basePath = new File(".").getAbsolutePath().replaceFirst("\\.$", "");
