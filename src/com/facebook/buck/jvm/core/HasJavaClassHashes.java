@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-present Facebook, Inc.
+ * Copyright 2014-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
@@ -14,19 +14,17 @@
  * under the License.
  */
 
-package com.facebook.buck.jvm.java;
+package com.facebook.buck.jvm.core;
 
-import com.facebook.buck.rules.BuildRule;
-import com.google.common.collect.ImmutableSortedSet;
+import com.facebook.buck.model.HasBuildTarget;
+import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.hash.HashCode;
 
-/**
- * A {@link BuildRule} that can have its output({@link #getPathToOutput}) published to a
- * maven repository under the maven coordinates provided by {@link #getMavenCoords}
- */
-public interface MavenPublishable extends HasMavenCoordinates {
+public interface HasJavaClassHashes extends HasBuildTarget {
 
   /**
-   * When published, these will be listed in pom.xml as dependencies
+   * @return a (possibly empty) map of names of {@code .class} files in the output of this rule
+   *     to SHA-1 hashes of their contents.
    */
-  ImmutableSortedSet<HasMavenCoordinates> getMavenDeps();
+  public ImmutableSortedMap<String, HashCode> getClassNamesToHashes();
 }
