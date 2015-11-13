@@ -1,0 +1,64 @@
+java_library(
+  name = 'nativelinkable',
+  srcs = [
+    'JavaNativeLinkable.java',
+  ],
+  deps = [
+    '//src/com/facebook/buck/cxx:platform',
+    '//src/com/facebook/buck/rules:build_rule',
+    '//third-party/java/guava:guava',
+  ],
+  visibility = [
+    'PUBLIC',
+  ],
+)
+
+java_library(
+  name = 'classhash',
+  srcs = [
+    'HasJavaClassHashes.java',
+  ],
+  deps = [
+    '//third-party/java/guava:guava',
+    '//src/com/facebook/buck/model:model',
+  ],
+  visibility = ['PUBLIC'],
+)
+
+java_library(
+  name = 'packagefinder',
+  srcs = [
+    'JavaPackageFinder.java',
+  ],
+  deps = [
+    '//src/com/facebook/buck/model:model',
+  ],
+  visibility = ['PUBLIC'],
+)
+
+java_immutables_library(
+  name = 'support',
+  srcs = [
+    'HasClasspathEntries.java',
+    'HasJavaAbi.java',
+    'HasMavenCoordinates.java',
+    'HasSources.java',
+    'JavaLibrary.java',
+    'JavaPackageFinder.java',
+    'MavenPublishable.java',
+  ],
+  tests = [
+    '//test/com/facebook/buck/jvm/java:integration-slow',
+    '//test/com/facebook/buck/jvm/java:java',
+  ],
+  deps = [
+    ':classhash',
+    ':packagefinder',
+    '//src/com/facebook/buck/model:model',
+    '//src/com/facebook/buck/rules:build_rule',
+    '//src/com/facebook/buck/rules:rules',
+    '//third-party/java/guava:guava',
+  ],
+  visibility = ['PUBLIC'],
+)
+

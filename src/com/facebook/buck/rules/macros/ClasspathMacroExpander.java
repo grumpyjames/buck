@@ -17,8 +17,8 @@
 package com.facebook.buck.rules.macros;
 
 import com.facebook.buck.io.ProjectFilesystem;
-import com.facebook.buck.jvm.java.HasClasspathEntries;
-import com.facebook.buck.jvm.java.JavaLibrary;
+import com.facebook.buck.jvm.core.HasClasspathEntries;
+import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.rules.BuildRule;
 import com.facebook.buck.rules.BuildRuleResolver;

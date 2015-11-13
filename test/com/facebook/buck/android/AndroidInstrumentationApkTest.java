@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.facebook.buck.cli.FakeBuckConfig;
 import com.facebook.buck.jvm.java.FakeJavaLibrary;
-import com.facebook.buck.jvm.java.JavaLibrary;
+import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.jvm.java.KeystoreBuilder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargetFactory;

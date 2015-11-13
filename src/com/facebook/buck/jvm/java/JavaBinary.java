@@ -19,6 +19,8 @@ package com.facebook.buck.jvm.java;
 import static com.facebook.buck.rules.BuildableProperties.Kind.PACKAGING;
 
 import com.facebook.buck.io.DirectoryTraverser;
+import com.facebook.buck.jvm.core.HasClasspathEntries;
+import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.rules.AbstractBuildRule;
 import com.facebook.buck.rules.AddToRuleKey;

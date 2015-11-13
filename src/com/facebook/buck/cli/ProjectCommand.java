@@ -33,7 +33,7 @@ import com.facebook.buck.json.BuildFileParseException;
 import com.facebook.buck.jvm.java.JavaBuckConfig;
 import com.facebook.buck.jvm.java.JavaFileParser;
 import com.facebook.buck.jvm.java.JavaLibraryDescription;
-import com.facebook.buck.jvm.java.JavaPackageFinder;
+import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.jvm.java.JavacOptions;
 import com.facebook.buck.jvm.java.intellij.IjModuleGraph;
 import com.facebook.buck.jvm.java.intellij.IjProject;

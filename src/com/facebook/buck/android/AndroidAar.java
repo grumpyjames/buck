@@ -21,9 +21,9 @@ import static com.facebook.buck.rules.BuildableProperties.Kind.PACKAGING;
 
 import com.facebook.buck.android.NdkCxxPlatforms.TargetCpuType;
 import com.facebook.buck.jvm.java.Classpaths;
-import com.facebook.buck.jvm.java.HasClasspathEntries;
+import com.facebook.buck.jvm.core.HasClasspathEntries;
 import com.facebook.buck.jvm.java.JarDirectoryStep;
-import com.facebook.buck.jvm.java.JavaLibrary;
+import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargets;
 import com.facebook.buck.rules.AbstractBuildRule;

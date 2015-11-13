@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-present Facebook, Inc.
+ * Copyright 2015-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
@@ -14,17 +14,13 @@
  * under the License.
  */
 
-package com.facebook.buck.jvm.java;
+package com.facebook.buck.jvm.core;
 
-import com.facebook.buck.model.HasBuildTarget;
+import com.facebook.buck.rules.BuildRule;
 import com.facebook.buck.rules.SourcePath;
-import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSortedSet;
 
-public interface HasJavaAbi extends HasBuildTarget {
+public interface HasSources extends BuildRule {
 
-  /**
-   * @return the {@link SourcePath} representing the ABI Jar for this rule.
-   */
-  Optional<SourcePath> getAbiJar();
-
+  ImmutableSortedSet<SourcePath> getSources();
 }

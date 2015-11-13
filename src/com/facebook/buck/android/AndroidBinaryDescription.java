@@ -24,7 +24,7 @@ import com.facebook.buck.android.FilterResourcesStep.ResourceFilter;
 import com.facebook.buck.android.NdkCxxPlatforms.TargetCpuType;
 import com.facebook.buck.android.ResourcesFilter.ResourceCompressionMode;
 import com.facebook.buck.dalvik.ZipSplitter.DexSplitStrategy;
-import com.facebook.buck.jvm.java.JavaLibrary;
+import com.facebook.buck.jvm.core.JavaLibrary;
 import com.facebook.buck.jvm.java.JavacOptions;
 import com.facebook.buck.jvm.java.Keystore;
 import com.facebook.buck.log.Logger;

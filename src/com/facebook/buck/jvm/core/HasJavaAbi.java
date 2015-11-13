@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-present Facebook, Inc.
+ * Copyright 2013-present Facebook, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may obtain
@@ -14,17 +14,17 @@
  * under the License.
  */
 
-package com.facebook.buck.jvm.java;
+package com.facebook.buck.jvm.core;
 
 import com.facebook.buck.model.HasBuildTarget;
-import com.google.common.collect.ImmutableSortedMap;
-import com.google.common.hash.HashCode;
+import com.facebook.buck.rules.SourcePath;
+import com.google.common.base.Optional;
 
-public interface HasJavaClassHashes extends HasBuildTarget {
+public interface HasJavaAbi extends HasBuildTarget {
 
   /**
-   * @return a (possibly empty) map of names of {@code .class} files in the output of this rule
-   *     to SHA-1 hashes of their contents.
+   * @return the {@link SourcePath} representing the ABI Jar for this rule.
    */
-  public ImmutableSortedMap<String, HashCode> getClassNamesToHashes();
+  Optional<SourcePath> getAbiJar();
+
 }

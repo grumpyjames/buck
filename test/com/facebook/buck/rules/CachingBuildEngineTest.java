@@ -41,7 +41,7 @@ import com.facebook.buck.event.FakeBuckEventListener;
 import com.facebook.buck.file.WriteFile;
 import com.facebook.buck.io.ProjectFilesystem;
 import com.facebook.buck.jvm.java.FakeJavaPackageFinder;
-import com.facebook.buck.jvm.java.JavaPackageFinder;
+import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.model.BuildId;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.model.BuildTargetFactory;

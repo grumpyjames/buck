@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.facebook.buck.jvm.java.JavaCompilationConstants;
 import com.facebook.buck.jvm.java.JavaFileParser;
-import com.facebook.buck.jvm.java.JavaPackageFinder;
+import com.facebook.buck.jvm.core.JavaPackageFinder;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.testutil.FakeProjectFilesystem;
 import com.facebook.buck.timing.FakeClock;

@@ -1,19 +1,4 @@
 java_library(
-  name = 'nativelinkable',
-  srcs = [
-    'JavaNativeLinkable.java',
-  ],
-  deps = [
-    '//src/com/facebook/buck/cxx:platform',
-    '//src/com/facebook/buck/rules:build_rule',
-    '//third-party/java/guava:guava',
-  ],
-  visibility = [
-    'PUBLIC',
-  ],
-)
-
-java_library(
   name = 'fat-jar-main',
   # Maximum compatibility
   source = '6',
@@ -46,18 +31,6 @@ java_library(
 )
 
 java_library(
-  name = 'classhash',
-  srcs = [
-    'HasJavaClassHashes.java',
-  ],
-  deps = [
-    '//third-party/java/guava:guava',
-    '//src/com/facebook/buck/model:model',
-  ],
-  visibility = ['PUBLIC'],
-)
-
-java_library(
   name = 'javac-internals',
   srcs = [
     'ZipEntryJavaFileObject.java',
@@ -78,17 +51,11 @@ java_immutables_library(
     'BuildsAnnotationProcessor.java',
     'DiagnosticPrettyPrinter.java',
     'ExternalJavac.java',
-    'HasClasspathEntries.java',
-    'HasJavaAbi.java',
-    'HasMavenCoordinates.java',
-    'HasSources.java',
     'JarBackedJavac.java',
-    'JavaLibrary.java',
     'Javac.java',
     'JavacErrorParser.java',
     'JdkProvidedInMemoryJavac.java',
     'Jsr199Javac.java',
-    'MavenPublishable.java',
     'TracingProcessorWrapper.java',
   ],
   tests = [
@@ -96,11 +63,11 @@ java_immutables_library(
     '//test/com/facebook/buck/jvm/java:java',
   ],
   deps = [
-    ':classhash',
     ':javac-internals',
-    ':packagefinder',
     '//src/com/facebook/buck/event:event',
     '//src/com/facebook/buck/io:io',
+    '//src/com/facebook/buck/jvm/core:classhash',
+    '//src/com/facebook/buck/jvm/core:support',
     '//src/com/facebook/buck/jvm/java/abi:protocol',
     '//src/com/facebook/buck/jvm/java/tracing:api',
     '//src/com/facebook/buck/jvm/java/tracing:tracing',
@@ -129,13 +96,13 @@ java_library(
   name = 'packagefinder',
   srcs = [
     'DefaultJavaPackageFinder.java',
-    'JavaPackageFinder.java',
     'ResourcesRootPackageFinder.java',
   ],
   deps = [
     '//src/com/facebook/buck/io:io',
     '//src/com/facebook/buck/model:model',
     '//src/com/facebook/buck/util:exceptions',
+    '//src/com/facebook/buck/jvm/core:packagefinder',
     '//third-party/java/guava:guava',
   ],
   visibility = ['PUBLIC'],
@@ -175,9 +142,7 @@ java_library(
     '//src/com/facebook/buck/util/exportedfiles:Preconditions.java',
   ],
   deps = [
-    ':classhash',
     ':fat-jar-main',
-    ':nativelinkable',
     ':packagefinder',
     ':steps',
     ':support',
@@ -187,6 +152,10 @@ java_library(
     '//src/com/facebook/buck/event:event',
     '//src/com/facebook/buck/graph:graph',
     '//src/com/facebook/buck/io:io',
+    '//src/com/facebook/buck/jvm/core:classhash',
+    '//src/com/facebook/buck/jvm/core:nativelinkable',
+    '//src/com/facebook/buck/jvm/core:packagefinder',
+    '//src/com/facebook/buck/jvm/core:support',
     '//src/com/facebook/buck/jvm/java/abi:protocol',
     '//src/com/facebook/buck/log:api',
     '//src/com/facebook/buck/maven:util',
@@ -237,6 +206,7 @@ java_immutables_library(
     ':packagefinder',
     ':support',
     '//src/com/facebook/buck/dalvik:dalvik_stats_tool',
+    '//src/com/facebook/buck/jvm/core:packagefinder',
     '//src/com/facebook/buck/jvm/java/abi:abi',
     '//src/com/facebook/buck/jvm/java/classes:classes',
     '//src/com/facebook/buck/jvm/java/runner:runner',
@@ -273,14 +243,15 @@ java_library(
     'JavaSymbolFinder.java',
   ],
   deps = [
-    ':packagefinder',
     ':rules',
+    ':packagefinder',
     ':support',
     '//src/com/facebook/buck/android:rules',
     '//src/com/facebook/buck/cli:config',
     '//src/com/facebook/buck/event:event',
     '//src/com/facebook/buck/io:io',
     '//src/com/facebook/buck/json:json',
+    '//src/com/facebook/buck/jvm/core:packagefinder',
     '//src/com/facebook/buck/model:model',
     '//src/com/facebook/buck/parser:config',
     '//src/com/facebook/buck/rules:build_rule',

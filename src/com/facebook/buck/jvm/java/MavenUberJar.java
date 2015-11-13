@@ -16,6 +16,10 @@
 
 package com.facebook.buck.jvm.java;
 
+import com.facebook.buck.jvm.core.HasMavenCoordinates;
+import com.facebook.buck.jvm.core.HasSources;
+import com.facebook.buck.jvm.core.JavaLibrary;
+import com.facebook.buck.jvm.core.MavenPublishable;
 import com.facebook.buck.rules.AbstractBuildRule;
 import com.facebook.buck.rules.BuildContext;
 import com.facebook.buck.rules.BuildRule;
