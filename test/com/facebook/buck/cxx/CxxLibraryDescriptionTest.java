@@ -40,11 +40,14 @@ import com.facebook.buck.rules.FakeBuildContext;
 import com.facebook.buck.rules.FakeBuildRule;
 import com.facebook.buck.rules.FakeBuildRuleParamsBuilder;
 import com.facebook.buck.rules.FakeBuildableContext;
+import com.facebook.buck.rules.FakeSourcePath;
 import com.facebook.buck.rules.PathSourcePath;
 import com.facebook.buck.rules.SourcePath;
 import com.facebook.buck.rules.SourcePathResolver;
 import com.facebook.buck.rules.TargetGraph;
-import com.facebook.buck.rules.TestSourcePath;
+import com.facebook.buck.rules.args.Arg;
+import com.facebook.buck.rules.args.SourcePathArg;
+import com.facebook.buck.rules.args.StringArg;
 import com.facebook.buck.rules.coercer.FrameworkPath;
 import com.facebook.buck.rules.coercer.PatternMatchedCollection;
 import com.facebook.buck.rules.coercer.SourceWithFlags;
@@ -53,10 +56,7 @@ import com.facebook.buck.shell.ExportFileBuilder;
 import com.facebook.buck.shell.GenruleBuilder;
 import com.facebook.buck.testutil.FakeProjectFilesystem;
 import com.facebook.buck.testutil.TargetGraphFactory;
-import com.facebook.buck.rules.args.Arg;
 import com.facebook.buck.util.BuckConstant;
-import com.facebook.buck.rules.args.SourcePathArg;
-import com.facebook.buck.rules.args.StringArg;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicates;
@@ -260,18 +260,18 @@ public class CxxLibraryDescriptionTest {
     CxxLibraryBuilder cxxLibraryBuilder = (CxxLibraryBuilder) new CxxLibraryBuilder(target)
         .setExportedHeaders(
             ImmutableSortedSet.<SourcePath>of(
-                new TestSourcePath(headerName),
+                new FakeSourcePath(headerName),
                 new BuildTargetSourcePath(genHeaderTarget)))
         .setHeaders(
-            ImmutableSortedSet.<SourcePath>of(new TestSourcePath(privateHeaderName)))
+            ImmutableSortedSet.<SourcePath>of(new FakeSourcePath(privateHeaderName)))
         .setSrcs(
             ImmutableSortedSet.of(
-                SourceWithFlags.of(new TestSourcePath("test/bar.cpp")),
+                SourceWithFlags.of(new FakeSourcePath("test/bar.cpp")),
                 SourceWithFlags.of(new BuildTargetSourcePath(genSourceTarget))))
         .setFrameworks(
             ImmutableSortedSet.of(
-                FrameworkPath.ofSourcePath(new TestSourcePath("/some/framework/path/s.dylib")),
-                FrameworkPath.ofSourcePath(new TestSourcePath("/another/framework/path/a.dylib"))))
+                FrameworkPath.ofSourcePath(new FakeSourcePath("/some/framework/path/s.dylib")),
+                FrameworkPath.ofSourcePath(new FakeSourcePath("/another/framework/path/a.dylib"))))
         .setDeps(ImmutableSortedSet.of(dep.getBuildTarget()));
 
     TargetGraph targetGraph = TargetGraphFactory.newInstance(
@@ -301,13 +301,13 @@ public class CxxLibraryDescriptionTest {
                 CxxHeaders.builder()
                     .putNameToPathMap(
                         Paths.get(headerName),
-                        new TestSourcePath(headerName))
+                        new FakeSourcePath(headerName))
                     .putNameToPathMap(
                         Paths.get(genHeaderName),
                         new BuildTargetSourcePath(genHeaderTarget))
                     .putFullNameToPathMap(
                         headerRoot.resolve(headerName),
-                        new TestSourcePath(headerName))
+                        new FakeSourcePath(headerName))
                     .putFullNameToPathMap(
                         headerRoot.resolve(genHeaderName),
                         new BuildTargetSourcePath(genHeaderTarget))
@@ -349,10 +349,10 @@ public class CxxLibraryDescriptionTest {
                 CxxHeaders.builder()
                     .putNameToPathMap(
                         Paths.get(privateHeaderName),
-                        new TestSourcePath(privateHeaderName))
+                        new FakeSourcePath(privateHeaderName))
                     .putFullNameToPathMap(
                         privateHeaderRoot.resolve(privateHeaderName),
-                        new TestSourcePath(privateHeaderName))
+                        new FakeSourcePath(privateHeaderName))
                     .build())
             .addIncludeRoots(
                 getHeaderSymlinkTreeIncludePath(
@@ -487,7 +487,7 @@ public class CxxLibraryDescriptionTest {
             String.format("//:rule#shared,%s", CxxPlatformUtils.DEFAULT_PLATFORM.getFlavor()));
     AbstractCxxSourceBuilder<CxxLibraryDescription.Arg> ruleBuilder = new CxxLibraryBuilder(target)
         .setSoname(soname)
-        .setSrcs(ImmutableSortedSet.of(SourceWithFlags.of(new TestSourcePath("foo.cpp"))));
+        .setSrcs(ImmutableSortedSet.of(SourceWithFlags.of(new FakeSourcePath("foo.cpp"))));
     TargetGraph targetGraph = TargetGraphFactory.newInstance(ruleBuilder.build());
     CxxLink rule = (CxxLink) ruleBuilder
         .build(
@@ -524,7 +524,7 @@ public class CxxLibraryDescriptionTest {
     CxxLibrary normal = (CxxLibrary) normalBuilder
         .setSrcs(
             ImmutableSortedSet.<SourceWithFlags>of(
-                SourceWithFlags.of(new TestSourcePath("test.cpp"))))
+                SourceWithFlags.of(new FakeSourcePath("test.cpp"))))
         .build(
             resolver,
             filesystem,
@@ -546,14 +546,14 @@ public class CxxLibraryDescriptionTest {
     AbstractCxxSourceBuilder<CxxLibraryDescription.Arg> linkWholeBuilder =
         new CxxLibraryBuilder(target)
             .setLinkWhole(true)
-            .setSrcs(ImmutableSortedSet.of(SourceWithFlags.of(new TestSourcePath("foo.cpp"))));
+            .setSrcs(ImmutableSortedSet.of(SourceWithFlags.of(new FakeSourcePath("foo.cpp"))));
 
     TargetGraph linkWholeGraph = TargetGraphFactory.newInstance(linkWholeBuilder.build());
     resolver = new BuildRuleResolver();
     CxxLibrary linkWhole = (CxxLibrary) linkWholeBuilder
         .setSrcs(
             ImmutableSortedSet.<SourceWithFlags>of(
-                SourceWithFlags.of(new TestSourcePath("test.cpp"))))
+                SourceWithFlags.of(new FakeSourcePath("test.cpp"))))
         .build(
             resolver,
             filesystem,
@@ -731,12 +731,12 @@ public class CxxLibraryDescriptionTest {
                 genHeaderName, new BuildTargetSourcePath(genHeaderTarget)))
         .setSrcs(
             ImmutableSortedSet.of(
-                SourceWithFlags.of(new TestSourcePath(sourceName)),
+                SourceWithFlags.of(new FakeSourcePath(sourceName)),
                 SourceWithFlags.of(new BuildTargetSourcePath(genSourceTarget))))
         .setFrameworks(
             ImmutableSortedSet.of(
-                FrameworkPath.ofSourcePath(new TestSourcePath("/some/framework/path/s.dylib")),
-                FrameworkPath.ofSourcePath(new TestSourcePath("/another/framework/path/a.dylib"))))
+                FrameworkPath.ofSourcePath(new FakeSourcePath("/some/framework/path/s.dylib")),
+                FrameworkPath.ofSourcePath(new FakeSourcePath("/another/framework/path/a.dylib"))))
         .setDeps(ImmutableSortedSet.of(dep.getBuildTarget()));
 
     // Construct C/C++ library build rules.
@@ -1007,7 +1007,7 @@ public class CxxLibraryDescriptionTest {
     // methods.
     CxxLibraryBuilder cxxLibraryBuilder =
         (CxxLibraryBuilder) new CxxLibraryBuilder(target)
-            .setSrcs(ImmutableSortedSet.of(SourceWithFlags.of(new TestSourcePath("test.c"))));
+            .setSrcs(ImmutableSortedSet.of(SourceWithFlags.of(new FakeSourcePath("test.c"))));
     TargetGraph targetGraph1 = TargetGraphFactory.newInstance(cxxLibraryBuilder.build());
     CxxLibrary cxxLibrary = (CxxLibrary) cxxLibraryBuilder
         .build(new BuildRuleResolver(), filesystem, targetGraph1);

@@ -22,10 +22,10 @@ import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.rules.BuildRule;
 import com.facebook.buck.rules.BuildRuleResolver;
 import com.facebook.buck.rules.FakeBuildRule;
+import com.facebook.buck.rules.FakeSourcePath;
 import com.facebook.buck.rules.SourcePath;
 import com.facebook.buck.rules.SourcePathResolver;
 import com.facebook.buck.rules.TargetGraph;
-import com.facebook.buck.rules.TestSourcePath;
 import com.facebook.buck.rules.args.Arg;
 import com.facebook.buck.rules.args.StringArg;
 import com.google.common.base.Predicates;
@@ -213,7 +213,7 @@ public class NativeLinkablesTest {
             resolver,
             NativeLinkableInput.builder().build(),
             NativeLinkable.Linkage.ANY,
-            ImmutableMap.<String, SourcePath>of("libc.so", new TestSourcePath("libc.so")));
+            ImmutableMap.<String, SourcePath>of("libc.so", new FakeSourcePath("libc.so")));
 
     BuildRule b =
         new FakeNativeLinkable(
@@ -222,7 +222,7 @@ public class NativeLinkablesTest {
             NativeLinkableInput.builder().build(),
             NativeLinkable.Linkage.STATIC,
             // Should be ignored, since this library supposed to be linked statically.
-            ImmutableMap.<String, SourcePath>of("libb.so", new TestSourcePath("libb.so")),
+            ImmutableMap.<String, SourcePath>of("libb.so", new FakeSourcePath("libb.so")),
             c);
 
     BuildRule a =
@@ -231,7 +231,7 @@ public class NativeLinkablesTest {
             resolver,
             NativeLinkableInput.builder().build(),
             NativeLinkable.Linkage.ANY,
-            ImmutableMap.<String, SourcePath>of("liba.so", new TestSourcePath("liba.so")),
+            ImmutableMap.<String, SourcePath>of("liba.so", new FakeSourcePath("liba.so")),
             b);
 
     // However, when collecting the transitive native linkable input for `B`, we *should* have
@@ -247,8 +247,8 @@ public class NativeLinkablesTest {
         sharedLibs,
         Matchers.equalTo(
             ImmutableSortedMap.<String, SourcePath>of(
-                "liba.so", new TestSourcePath("liba.so"),
-                "libc.so", new TestSourcePath("libc.so"))));
+                "liba.so", new FakeSourcePath("liba.so"),
+                "libc.so", new FakeSourcePath("libc.so"))));
   }
 
 }
