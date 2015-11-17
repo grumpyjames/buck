@@ -83,7 +83,7 @@ public class JavacStepFactory implements RuleKeyAppendable {
   @Override
   public RuleKeyBuilder appendToRuleKey(RuleKeyBuilder builder) {
     builder.setReflectively("javacOptions", javacOptions);
-    // Hmm. Feels a bit icky to not include the amender here.
+    builder.setReflectively("amender", amender);
     return builder;
   }
 }

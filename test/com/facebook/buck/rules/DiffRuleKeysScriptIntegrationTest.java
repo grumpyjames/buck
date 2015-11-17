@@ -146,12 +146,12 @@ public class DiffRuleKeysScriptIntegrationTest {
     String expectedResult = Joiner.on('\n').join(
         "Change details for [//:java_lib_2->buck.extraDeps]",
         "  (buck.declaredDeps):",
-        "    -[ruleKey(sha1=454975950470ca0fec62cead356d3296654c23bf)]\n" +
-        "    +[ruleKey(sha1=074b2ee17296c7b072fe8053eba19f669d432a40)]\n" +
+        "    -[ruleKey(sha1=d93bba98fcfe516b11019c27c4de48f0fb216557)]\n" +
+        "    +[ruleKey(sha1=cf722bd52e2b8e7cc4084ad59dd99413bd3030dc)]\n" +
         "Change details for [//:java_lib_2->buck.extraDeps]",
         "  (buck.declaredDeps):",
-        "    -[ruleKey(sha1=454975950470ca0fec62cead356d3296654c23bf)]\n" +
-        "    +[ruleKey(sha1=074b2ee17296c7b072fe8053eba19f669d432a40)]\n" +
+        "    -[ruleKey(sha1=d93bba98fcfe516b11019c27c4de48f0fb216557)]\n" +
+        "    +[ruleKey(sha1=cf722bd52e2b8e7cc4084ad59dd99413bd3030dc)]\n" +
         "  (name):",
         "    -[string(\"//:java_lib_1#abi\")]",
         "    +[string(\"//:java_lib_3#abi\")]",
