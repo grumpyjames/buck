@@ -102,7 +102,8 @@ public class DiffRuleKeysScriptIntegrationTest {
     invokeBuckCommand(workspace, "buck-1.log");
 
     String expectedResult = Joiner.on('\n').join(
-        "Change details for [//:java_lib_1#abi->javacOptions.appendableSubKey]",
+        "Change details for " +
+            "[//:java_lib_1#abi->javacStepFactory.appendableSubKey->javacOptions.appendableSubKey]",
         "  (sourceLevel):",
         "    -[string(\"6\")]",
         "    +[string(\"7\")]",
@@ -145,12 +146,12 @@ public class DiffRuleKeysScriptIntegrationTest {
     String expectedResult = Joiner.on('\n').join(
         "Change details for [//:java_lib_2->buck.extraDeps]",
         "  (buck.declaredDeps):",
-        "    -[ruleKey(sha1=ac6415ff8680a632832c3c87f236f26b7c949430)]\n" +
-        "    +[ruleKey(sha1=e7c35a5f3e0425960a61354f6e5ed2c9d3e3e92d)]\n" +
+        "    -[ruleKey(sha1=d93bba98fcfe516b11019c27c4de48f0fb216557)]\n" +
+        "    +[ruleKey(sha1=cf722bd52e2b8e7cc4084ad59dd99413bd3030dc)]\n" +
         "Change details for [//:java_lib_2->buck.extraDeps]",
         "  (buck.declaredDeps):",
-        "    -[ruleKey(sha1=ac6415ff8680a632832c3c87f236f26b7c949430)]\n" +
-        "    +[ruleKey(sha1=e7c35a5f3e0425960a61354f6e5ed2c9d3e3e92d)]\n" +
+        "    -[ruleKey(sha1=d93bba98fcfe516b11019c27c4de48f0fb216557)]\n" +
+        "    +[ruleKey(sha1=cf722bd52e2b8e7cc4084ad59dd99413bd3030dc)]\n" +
         "  (name):",
         "    -[string(\"//:java_lib_1#abi\")]",
         "    +[string(\"//:java_lib_3#abi\")]",
