@@ -53,6 +53,9 @@ class RuleKeyStructureInfo(object):
             self._entries)
         self._name_to_key = RuleKeyStructureInfo._makeNameToKeyMap(
             self._entries)
+        print('*** self._entries %s' % self._entries)
+        print('*** self._key_to_struct %s' % self._key_to_struct)
+        print('*** self._name_to_key %s' % self._name_to_key)
 
     def getByKey(self, key):
         return self._key_to_struct.get(key)
@@ -79,8 +82,6 @@ class RuleKeyStructureInfo(object):
             name = list(structure['name'])[0]
             if name.startswith('string("'):
                 name = name[8:-2]
-        print('*** looking at name %s' % name)
-        print(structure)
         return name
 
     @staticmethod
