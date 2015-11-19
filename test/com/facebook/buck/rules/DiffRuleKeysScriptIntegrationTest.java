@@ -30,6 +30,7 @@ import com.google.common.base.Optional;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -68,6 +69,7 @@ public class DiffRuleKeysScriptIntegrationTest {
   }
 
   @Test
+  @Ignore
   public void fileContentsChanged() throws Exception {
     ProjectWorkspace workspace = TestDataHelper.createProjectWorkspaceForScenario(
         this, "diff_rulekeys_script", tmp);
@@ -117,6 +119,7 @@ public class DiffRuleKeysScriptIntegrationTest {
   }
 
   @Test
+  @Ignore
   public void dependencyAdded() throws Exception {
     ProjectWorkspace workspace = TestDataHelper.createProjectWorkspaceForScenario(
         this, "diff_rulekeys_script", tmp);

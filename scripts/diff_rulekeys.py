@@ -2,11 +2,11 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
+
 import argparse
 import collections
 import os
 import re
-import sys
 
 RULE_LINE_REGEX = re.compile(r'.*(\[[^\]+]\])*\s+RuleKey\s+(.*)')
 LOGGER_NAME = 'com.facebook.buck.rules.RuleKeyBuilder'
@@ -168,6 +168,7 @@ def diffInternal(
         right_s,
         right_info,
         verbose):
+    print(label)
     keys = set(left_s.keys()).union(set(right_s.keys()))
     changed_key_pairs_with_labels = set()
     report = []
