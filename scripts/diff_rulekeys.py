@@ -135,6 +135,7 @@ class RuleKeyStructureInfo(object):
         rule_key_structures = []
         with open(file_path, 'r') as buck_out:
             for line in buck_out.readlines():
+                print(line)
                 match = RULE_LINE_REGEX.match(line)
                 if match is None:
                     continue

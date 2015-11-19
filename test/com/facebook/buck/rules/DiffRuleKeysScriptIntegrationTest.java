@@ -35,6 +35,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -50,6 +51,7 @@ public class DiffRuleKeysScriptIntegrationTest {
   public DebuggableTemporaryFolder tmp = new DebuggableTemporaryFolder();
   private Logger ruleKeyBuilderLogger;
   private Level previousRuleKeyBuilderLevel;
+  private long logSizeSoFar = 0;
 
   @Before
   public void enableVerboseRuleKeys() throws Exception {
@@ -178,11 +180,13 @@ public class DiffRuleKeysScriptIntegrationTest {
 
   private ProcessExecutor.Result runRuleKeyDiffer(
       ProjectWorkspace workspace) throws IOException, InterruptedException {
+    Path buck0 = tmp.getRootPath().resolve("buck-0.log");
+    Path buck1 = tmp.getRootPath().resolve("buck-1.log");
     ProcessExecutor.Result result = workspace.runCommand(
         "python2.7",
         Paths.get("scripts", "diff_rulekeys.py").toString(),
-        tmp.getRootPath().resolve("buck-0.log").toString(),
-        tmp.getRootPath().resolve("buck-1.log").toString(),
+        buck0.toString(),
+        buck1.toString(),
         "//:java_lib_2");
     assertThat(result.getStderr(), Matchers.equalTo(Optional.of("")));
     assertThat(result.getExitCode(), Matchers.is(0));
@@ -195,8 +199,24 @@ public class DiffRuleKeysScriptIntegrationTest {
         "--show-rulekey",
         "//:java_lib_2");
     buckCommandResult.assertSuccess();
-    workspace.copyFile(LOG_FILE_PATH.toString(), logOut);
-    workspace.writeContentsToPath("", LOG_FILE_PATH.toString());
+
+    copyLogSegment(workspace, logOut, logSizeSoFar);
+  }
+
+  private void copyLogSegment(ProjectWorkspace workspace, String logOut, long offset) throws IOException {
+    Path destination = workspace.getPath(logOut);
+    Path source = workspace.getPath(LOG_FILE_PATH.toString());
+
+    Files.deleteIfExists(destination);
+    InputStream logInputStream = Files.newInputStream(source);
+    long skip = logInputStream.skip(offset);
+    if (skip != offset)
+    {
+      throw new RuntimeException("ffs");
+    }
+    Files.copy(logInputStream, destination);
+
+    logSizeSoFar = source.toFile().length();
   }
 
 }
