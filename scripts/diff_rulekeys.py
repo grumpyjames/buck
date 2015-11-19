@@ -45,7 +45,6 @@ the top-level target you've built."""
         default=False)
     return parser.parse_args()
 
-
 class RuleKeyStructureInfo(object):
     def __init__(self, buck_out_path):
         self._entries = RuleKeyStructureInfo._parseBuckOut(buck_out_path)
@@ -53,9 +52,6 @@ class RuleKeyStructureInfo(object):
             self._entries)
         self._name_to_key = RuleKeyStructureInfo._makeNameToKeyMap(
             self._entries)
-        print('*** self._entries %s' % self._entries)
-        print('*** self._key_to_struct %s' % self._key_to_struct)
-        print('*** self._name_to_key %s' % self._name_to_key)
 
     def getByKey(self, key):
         return self._key_to_struct.get(key)
@@ -119,8 +115,14 @@ class RuleKeyStructureInfo(object):
         # so we can cheat and split on ): instead
         structure_entries = structure.split('):')
         structure_entries = [e + ')' for e in structure_entries if len(e) > 0]
-        structure_map = collections.defaultdict(list)
+        structure_map = collections.OrderedDict()
         last_key = None
+
+        def appendValue(map, key, val):
+            if key in map:
+                map[key].append(val)
+            else:
+                map[key] = [val]
 
         for e in reversed(structure_entries):
             if len(e) == 0:
@@ -128,7 +130,7 @@ class RuleKeyStructureInfo(object):
             elif e.startswith('key('):
                 last_key = e[4:-1]
             else:
-                structure_map[last_key].append(e)
+                appendValue(structure_map, last_key, e)
                 last_key = None
 
         return (top_key, structure_map)
@@ -171,7 +173,6 @@ def diffInternal(
         right_s,
         right_info,
         verbose):
-    print(label)
     keys = set(left_s.keys()).union(set(right_s.keys()))
     changed_key_pairs_with_labels = set()
     report = []
