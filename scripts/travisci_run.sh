@@ -13,8 +13,7 @@ export TERM=dumb
 # processes killed if we do not limit our threads.
 # Until we get https://github.com/facebook/buck/pull/479, we cannot run the
 # Go tests in Travis
-./bin/buck test \
-  --num-threads=3
+./bin/buck test //test/com/facebook/buck/rules
 
 # Run all the other checks with ant.
 ant travis
