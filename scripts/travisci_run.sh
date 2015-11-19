@@ -5,6 +5,8 @@ set -eux
 # because otherwise Travis thinks our logs are too long.
 export TERM=dumb
 
+python2.7 --version
+
 # Use Buck to run the tests first because its output is more
 # conducive to diagnosing failed tests than Ant's is.
 ./bin/buck build buck || { cat buck-out/log/ant.log; exit 1; }
