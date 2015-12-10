@@ -260,7 +260,7 @@ public class JavacStep implements Step {
       ImmutableSortedSet<Path> buildClasspathEntries) {
     final ImmutableList.Builder<String> builder = ImmutableList.builder();
 
-    javacOptions.appendOptionsToList(new AbstractJavacOptions.OptionsConsumer() {
+    javacOptions.appendOptionsToList(new OptionsConsumer() {
       @Override
       public void addOptionValue(String option, String value) {
         builder.add("-" + option).add(value);
