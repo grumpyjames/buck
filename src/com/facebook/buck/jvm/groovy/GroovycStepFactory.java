@@ -19,6 +19,7 @@ package com.facebook.buck.jvm.groovy;
 import com.facebook.buck.io.ProjectFilesystem;
 import com.facebook.buck.jvm.core.SuggestBuildRules;
 import com.facebook.buck.jvm.java.CompileStepFactory;
+import com.facebook.buck.jvm.java.JavacOptions;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.rules.BuildContext;
 import com.facebook.buck.rules.BuildableContext;
@@ -31,16 +32,21 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 class GroovycStepFactory implements CompileStepFactory {
   private final Tool groovyc;
   private final Optional<ImmutableList<String>> extraArguments;
+  private final JavacOptions javacOptions;
 
   public GroovycStepFactory(
       Tool groovyc,
-      Optional<ImmutableList<String>> extraArguments) {
+      Optional<ImmutableList<String>> extraArguments,
+      JavacOptions javacOptions) {
     this.groovyc = groovyc;
     this.extraArguments = extraArguments;
+    this.javacOptions = javacOptions;
   }
 
   @Override
@@ -62,6 +68,7 @@ class GroovycStepFactory implements CompileStepFactory {
         new GroovycStep(
             groovyc,
             extraArguments,
+            javacOptions,
             resolver,
             outputDirectory,
             sourceFilePaths,
@@ -72,6 +79,8 @@ class GroovycStepFactory implements CompileStepFactory {
   @Override
   public RuleKeyBuilder appendToRuleKey(RuleKeyBuilder builder) {
     groovyc.appendToRuleKey(builder);
-    return builder.setReflectively("extraArguments", extraArguments);
+    return builder
+        .setReflectively("extraArguments", extraArguments)
+        .setReflectively("javacOptions", javacOptions);
   }
 }
