@@ -129,7 +129,7 @@ public class JavaTest
 
   private final Optional<Path> testTempDirOverride;
 
-  protected JavaTest(
+  public JavaTest(
       BuildRuleParams params,
       SourcePathResolver resolver,
       Set<SourcePath> srcs,
@@ -543,7 +543,7 @@ public class JavaTest
         if (lastSlashIndex >= 0) {
           source = source.substring(lastSlashIndex + 1);
         }
-        source = source.substring(0, source.length() - ".java".length());
+        source = source.substring(0, source.lastIndexOf("."));
         sourceClassNames.add(source);
       }
 

@@ -32,8 +32,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 class GroovycStepFactory implements CompileStepFactory {
   private final Tool groovyc;
