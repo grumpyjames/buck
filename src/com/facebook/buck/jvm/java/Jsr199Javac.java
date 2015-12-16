@@ -418,9 +418,7 @@ public abstract class Jsr199Javac implements Javac {
 
     @Override
     public void close() throws IOException {
-      if (classLoader != null) {
-        classLoader.close();
-      }
+
     }
   }
 }
