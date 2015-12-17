@@ -100,6 +100,7 @@ import com.facebook.buck.jvm.java.JavaBuckConfig;
 import com.facebook.buck.jvm.java.JavaLibraryDescription;
 import com.facebook.buck.jvm.java.JavaTestDescription;
 import com.facebook.buck.jvm.java.JavacOptions;
+import com.facebook.buck.jvm.java.JvmLibraryDescription;
 import com.facebook.buck.jvm.java.KeystoreDescription;
 import com.facebook.buck.jvm.java.PrebuiltJarDescription;
 import com.facebook.buck.log.CommandThreadFactory;
@@ -550,9 +551,10 @@ public class KnownBuildRuleTypes {
             defaultCxxPlatform));
     GroovyBuckConfig groovyBuckConfig = new GroovyBuckConfig(config);
     builder.register(
-        new GroovyLibraryDescription(
-            groovyBuckConfig,
-            defaultJavacOptions));
+        new JvmLibraryDescription<GroovyLibraryDescription.Arg>(
+            new GroovyLibraryDescription(
+                groovyBuckConfig,
+                defaultJavacOptions)));
     builder.register(
         new GroovyTestDescription(
             groovyBuckConfig,
@@ -570,7 +572,8 @@ public class KnownBuildRuleTypes {
         halideBuckConfig));
     builder.register(new IosReactNativeLibraryDescription(reactNativeBuckConfig));
     builder.register(new JavaBinaryDescription(defaultJavacOptions, defaultCxxPlatform));
-    builder.register(new JavaLibraryDescription(defaultJavacOptions));
+    builder.register(new JvmLibraryDescription<JavaLibraryDescription.Arg>(
+        new JavaLibraryDescription(defaultJavacOptions)));
     builder.register(
         new JavaTestDescription(
             defaultJavacOptions,

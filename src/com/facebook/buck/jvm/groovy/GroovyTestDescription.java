@@ -20,8 +20,8 @@ import com.facebook.buck.jvm.common.ResourceValidator;
 import com.facebook.buck.jvm.java.CalculateAbi;
 import com.facebook.buck.jvm.java.JavaLibrary;
 import com.facebook.buck.jvm.java.JavaTest;
-import com.facebook.buck.jvm.java.JavacArgInterpreter;
 import com.facebook.buck.jvm.java.JavacOptions;
+import com.facebook.buck.jvm.java.JavacOptionsFactory;
 import com.facebook.buck.jvm.java.TestType;
 import com.facebook.buck.model.BuildTarget;
 import com.facebook.buck.parser.NoSuchBuildTargetException;
@@ -92,10 +92,10 @@ public class GroovyTestDescription implements Description<GroovyTestDescription.
             .addFlavors(CalculateAbi.FLAVOR)
             .build();
 
-    GroovycStepFactory stepFactory = new GroovycStepFactory(
+    GroovycToJarStepFactory stepFactory = new GroovycToJarStepFactory(
         groovyBuckConfig.getGroovyCompiler().get(),
         args.extraGroovycArguments,
-        JavacArgInterpreter.populateJavacOptions(
+        JavacOptionsFactory.create(
             defaultJavacOptions,
             params,
             resolver,
